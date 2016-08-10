@@ -1,9 +1,6 @@
 function SceneMain (name) {
-  this.name = name;
-
   // Extends this from Game.Scene.
   Game.Scene.call(this, name);
-
   this.init();
 }
 
