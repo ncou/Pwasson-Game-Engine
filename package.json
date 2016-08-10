@@ -1,0 +1,15 @@
+{
+  "name": "pwasson-client",
+  "version": "0.1.0",
+  "description": "The Pwasson 2D multiplayer game HTML5 client.",
+  "keywords": [
+    "pwasson",
+    "2d",
+    "multiplayer",
+    "game",
+    "html",
+    "client"
+  ],
+  "author": "SkyzohKey <skyzohkey@protonmail.com>",
+  "license": "MIT"
+}

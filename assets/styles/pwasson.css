@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0 auto;
+  padding: 0;
+  
+  background-color: #171717;
+  font-family: Aller, Verdana, sans-serif;
+}
+
+#game-wrapper {
+  display: flex;
+}
+
+#pwasson {
+  /*width: 800px;
+  height: 400px;*/
+  margin: 20px auto 0 auto;
+
+  border: 3px solid #000000;
+}
