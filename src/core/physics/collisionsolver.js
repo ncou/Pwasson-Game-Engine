@@ -7,20 +7,20 @@ function CollisionSolver () {
 
 /**
 * @public {bool} RectangleRectangle - Detects a collision between two rectangles.
-* @param {HitBox} shape1 - The first rectangle.
-* @param {HitBox} shape2 - The second rectangle.
+* @param {Sprite} shape1 - The first rectangle.
+* @param {Sprite} shape2 - The second rectangle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
 CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
   var collisionDirection = Game.Physics.CollisionDirection.NONE;
 
   // Get the vector to check against.
-  var vX = (shape1.position.x + (shape1.size.x / 2)) - (shape2.position.x + (shape2.size.x / 2));
-  var vY = (shape1.position.y + (shape1.size.y / 2)) - (shape2.position.y + (shape2.size.y / 2));
+  var vX = (shape1.hitbox.position.x + (shape1.hitbox.size.x / 2)) - (shape2.hitbox.position.x + (shape2.hitbox.size.x / 2));
+  var vY = (shape1.hitbox.position.y + (shape1.hitbox.size.y / 2)) - (shape2.hitbox.position.y + (shape2.hitbox.size.y / 2));
 
   // Add the half widths and half heights of the shapes.
-  var hWidths = (shape1.size.x / 2) + (shape2.size.x / 2);
-  var hHeights = (shape1.size.y / 2) + (shape2.size.y / 2);
+  var hWidths = (shape1.hitbox.size.x / 2) + (shape2.hitbox.size.x / 2);
+  var hHeights = (shape1.hitbox.size.y / 2) + (shape2.hitbox.size.y / 2);
 
   /**
   * If the X and Y vectors are less than the half width or half height, they must be inside the shape.
@@ -36,13 +36,13 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
         collisionDirection = Game.Physics.CollisionDirection.TOP;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.position.y += oY;
+          shape1.hitbox.position.y += oY;
         }
       } else {
         collisionDirection = Game.Physics.CollisionDirection.BOTTOM;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.position.y -= oY;
+          shape1.hitbox.position.y -= oY;
         }
       }
     } else {
@@ -50,13 +50,13 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
         collisionDirection = Game.Physics.CollisionDirection.LEFT;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.position.x += oX;
+          shape1.hitbox.position.x += oX;
         }
       } else {
         collisionDirection = Game.Physics.CollisionDirection.RIGHT;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.position.x -= oX;
+          shape1.hitbox.position.x -= oX;
         }
       }
     }
@@ -69,8 +69,8 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
 
 /**
 * @public {bool} RotRectangleRectangle - Detects a collision between a rotated rectangle and a rectangle.
-* @param {HitBox} shape1 - The first rectangle.
-* @param {HitBox} shape2 - The second rectangle.
+* @param {Sprite} shape1 - The first rectangle.
+* @param {Sprite} shape2 - The second rectangle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
 CollisionSolver.prototype.RotRectangleRectangle = function (shape1, shape2) {
@@ -79,8 +79,8 @@ CollisionSolver.prototype.RotRectangleRectangle = function (shape1, shape2) {
 
 /**
 * @public {bool} CircleCircle - Detects a collision between two circles.
-* @param {HitBox} shape1 - The first circle.
-* @param {HitBox} shape2 - The second circle.
+* @param {Sprite} shape1 - The first circle.
+* @param {Sprite} shape2 - The second circle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
 CollisionSolver.prototype.CircleCircle = function (shape1, shape2) {
@@ -89,8 +89,8 @@ CollisionSolver.prototype.CircleCircle = function (shape1, shape2) {
 
 /**
 * @public {bool} RotCircleCircle - Detects a collision between a rotated circle and a circle.
-* @param {HitBox} shape1 - The first circle.
-* @param {HitBox} shape2 - The second circle.
+* @param {Sprite} shape1 - The first circle.
+* @param {Sprite} shape2 - The second circle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
 CollisionSolver.prototype.RotCircleCircle = function (shape1, shape2) {
@@ -99,8 +99,8 @@ CollisionSolver.prototype.RotCircleCircle = function (shape1, shape2) {
 
 /**
 * @public {bool} RectangleCircle - Detects a collision between a rectangle and a circle.
-* @param {HitBox} shape1 - The first circle.
-* @param {HitBox} shape2 - The second circle.
+* @param {Sprite} shape1 - The first circle.
+* @param {Sprite} shape2 - The second circle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
 CollisionSolver.prototype.RectangleCircle = function (shape1, shape2) {
