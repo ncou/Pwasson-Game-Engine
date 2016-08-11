@@ -79,12 +79,14 @@ Sprite.prototype.draw = function (delta) {
         (this.position.x + (this.size.x * this.anchor.x)),
         (this.position.y + (this.size.y * this.anchor.y))
       );
-      Game.context.rotate(((this.rotation + 1) % 360) * Math.PI / 180);
+      Game.context.rotate(((this.rotation) % 360) * Math.PI / 180);
+
+      // Let's reset the transformations. Uglyness but...
       Game.context.translate(
         -(this.position.x + (this.size.x * this.anchor.x)),
         -(this.position.y + (this.size.y * this.anchor.y))
       );
-      
+
       switch (this.shape) {
         case Game.Shape.RECTANGLE:
           Game.context.rect(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -99,8 +101,7 @@ Sprite.prototype.draw = function (delta) {
           console.log('Unknown shape. Please refer to Game.Shape for a list of available shapes.');
           break;
       }
-      
-      
+
       if (this.bgColor !== null) {
         Game.context.fillStyle = this.bgColor;
         Game.context.fill();
@@ -130,6 +131,9 @@ Sprite.prototype.update = function (delta) {
   }
 
   this.draw(delta);
+  
+  // Keep the hitbox position updated.
+  this.hitbox.position.copy(this.position);
 };
 
 /**

@@ -1,5 +1,6 @@
 /**
 * @class World - Physical world.
+* @param {Scene} parentScene - The scene in which the world has been initialized.
 * @param {Vector} gravity - The world gravity.
 * @param {Object} properties - The world properties.
 *
@@ -8,14 +9,16 @@
 * @property {Vector} restitution - The world restitution. Defaults to x: 0.2, y: 0.2
 * @property {Array<Sprite>} childrens - The Sprites that are affected by this world.
 **/
-function World (gravity, properties) {
+function World (parentScene, gravity, properties) {
   this._className = 'World';
+  this._parent = parentScene;
 
   this.friction = new Game.Vector(0.3, 0.3);
-  this.gravity = new Game.Vector(0, 9.8);
+  this.gravity = (gravity || new Game.Vector(0, 9.8));
   this.restitution = new Game.Vector(0.2, 0.2);
 
   this.childrens = [];
+  this._solver = new Game.Physics.CollisionSolver();
 
   Game.merge(this, properties);
   this._init();
@@ -26,6 +29,32 @@ function World (gravity, properties) {
 **/
 World.prototype._init = function () {
   console.log('Initialized a new Game.Physics.World');
+};
+
+/**
+* @private {void} _update - Update the world.
+* @param {double} delta - The scene delta time.
+**/
+World.prototype._update = function (delta) {
+  for (var i = 0; i < this.childrens.length; i++) {
+    var child = this.childrens[i];
+    if (child.needsUpdate === true) {
+      if (child.static == false) {
+        this.childrens[i].velocity.x *= this.friction.x;
+        this.childrens[i].velocity.y += this.gravity.y / delta;
+        
+        // Let's check for collisions.
+        for (var j = 0; j < this.childrens.length; j++) {
+          var oChild = this.childrens[j];
+          if (oChild != child) {
+            this._solver.RectangleRectangle(child, oChild);
+          }
+        }
+        
+        this.childrens[i].position.add(this.childrens[i].velocity);
+      }
+    }
+  }
 };
 
 /**
@@ -40,10 +69,9 @@ World.prototype.addChild = function (sprite) {
   sprite._world = this;
   sprite.removeFromWorld = function () { this._world.removeChild(this._worldIndex); };
 
-  var index = this.childrens.push(child);
+  var index = this.childrens.push(sprite);
   if (
     this.childrens[index] !== undefined &&
-    typeof this.childrens[index] === 'object' &&
     this.childrens[index]._className === 'Sprite'
   ) {
     return true;

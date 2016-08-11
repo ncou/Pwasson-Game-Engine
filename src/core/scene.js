@@ -6,6 +6,7 @@
 * @property {Vector} position - The scene position within the Canvas.
 * @property {Vector} size - The scene size, defaults to the one defined in config.js.
 * @property {Array} childrens - The childrens this scene has to update/handle.
+* @property {Physics.World} world - A physical world object.
 * @property {int} maxFPS - The maximum FPS this scene allows. Defaults to 60.
 * @property [readOnly] {int} delta - The scene delta time.
 **/
@@ -17,6 +18,7 @@ function Scene (name) {
   this.size = { width: Game.Config.canvas.width, height: Game.Config.canvas.height };
 
   this.childrens = [];
+  this.world = null;
   
   this.maxFPS = 60;
   this.delta = 0;
@@ -38,6 +40,15 @@ Scene.prototype._init = function () {
 };
 
 /**
+* @public {void} initWorld - Create and initialize a new world for the scene.
+* @param {Vector} gravity
+* @param {Object} properties
+**/
+Scene.prototype.addWorld = function (gravity, properties) {
+  this.world = new Game.Physics.World(this, gravity, properties);
+};
+
+/**
 * @public {bool} addChild - Add a child to the scene.
 * @param {Object} child - The object to add to this scene.
 * @return true if success, false if failure.
@@ -51,8 +62,13 @@ Scene.prototype.addChild = function (child) {
 
   var index = this.childrens.push(child);
   if (this.childrens[index] !== undefined && typeof this.childrens[index] === 'object') {
+    if (this.world != null && child.physics == true) {
+      this.world.childrens.push(child);
+    }
+  
     return true;
   }
+  
   return false;
 };
 
@@ -109,6 +125,11 @@ Scene.prototype._loop = function () {
 
     // Run the scene update method.
     this.update(this.delta);
+    
+    // If the scene has a physics world, let's update.
+    if (this.world !== undefined && this.world != null) {
+      this.world._update(this.delta);
+    }
 
     /**
     * Let simply update every childrens this scene has.
@@ -118,7 +139,9 @@ Scene.prototype._loop = function () {
       var child = this.childrens[i];
       if (child.needsUpdate === true) {
         child.update(this.delta);
-        this.childrens[i].last = { position: child.position, rotation: child.rotation, size: child.size };
+        this.childrens[i].last.position.copy(child.position);
+        this.childrens[i].last.size.copy(child.size);
+        this.childrens[i].last.rotation = child.rotation;
       }
     }
   }
@@ -145,11 +168,9 @@ Scene.prototype.resetChild = function (child) {
   if (this.childrens[child._index] === undefined) return false;
 
   this.childrens[child._index].lock = true;
-  this.childrens[child._index].position.x  = this.childrens[child._index].base.position.x;
-  this.childrens[child._index].position.y  = this.childrens[child._index].base.position.y;
-  this.childrens[child._index].rotation    = this.childrens[child._index].base.rotation;
-  this.childrens[child._index].size.width  = this.childrens[child._index].base.size.width;
-  this.childrens[child._index].size.height = this.childrens[child._index].base.size.height;
+  this.childrens[child._index].position.copy(this.childrens[child._index].base.position);
+  this.childrens[child._index].size.copy(this.childrens[child._index].base.size);
+  this.childrens[child._index].rotation = this.childrens[child._index].base.rotation;
   this.childrens[child._index].lock = false;
 
   this.childrens[child._index].needsUpdate = true;

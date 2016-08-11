@@ -36,13 +36,14 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
         collisionDirection = Game.Physics.CollisionDirection.TOP;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.hitbox.position.y += oY;
+          shape1.position.y += oY;
         }
       } else {
         collisionDirection = Game.Physics.CollisionDirection.BOTTOM;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.hitbox.position.y -= oY;
+          shape1.position.y -= oY;
+          shape1.velocity.y = 0;
         }
       }
     } else {
@@ -50,13 +51,15 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
         collisionDirection = Game.Physics.CollisionDirection.LEFT;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.hitbox.position.x += oX;
+          shape1.position.x += oX;
+          shape1.velocity.x = 0;
         }
       } else {
         collisionDirection = Game.Physics.CollisionDirection.RIGHT;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.hitbox.position.x -= oX;
+          shape1.position.x -= oX;
+          shape1.velocity.x = 0;
         }
       }
     }
