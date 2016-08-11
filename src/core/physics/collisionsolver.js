@@ -21,7 +21,7 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
 * @param {HitBox} shape2 - The second rectangle.
 * @return {bool} Returns true if both hitbox collides, false if not.
 **/
-CollisionSolver.prototype.RotRectangleRectangle = function (rect1, rect2) {
+CollisionSolver.prototype.RotRectangleRectangle = function (shape1, shape2) {
   return true;
 };
 
