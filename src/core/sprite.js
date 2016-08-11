@@ -17,6 +17,7 @@
 * @property {string|Color} fontColor - Used if the sprite contains some text.
 * @property {Object} layers - The different layers used to animate the sprite.
 * @property {bool} needsUpdate - If true the sprite will be update, else it wont.
+* @property {bool} physics - If true the sprite will be given a hitbox and will be able to use the scene physic world.
 * @property {Vector} position - The sprite position.
 * @property {int} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
 * @property {Shape} shape - The sprite shape. Used for drawing, also used for physics as the hitbox.
@@ -38,6 +39,7 @@ function Sprite (x, y, width, height, texture, properties) {
   this.fontColor = '#fff';
   this.layers = {};
   this.needsUpdate = true;
+  this.physics = false;
   this.position = new Game.Vector(x, y);
   this.rotation = 0;
   this.size = new Game.Vector(width, height);
