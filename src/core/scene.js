@@ -79,6 +79,17 @@ Scene.prototype.removeChild = function (index) {
 Scene.prototype.update = function (delta) {};
 
 /**
+* @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.
+* @param {Physics.CollisionDirection} direction - The collision direction.
+* @param {HitBox} shape1 - The first shape. This shape is the one that collided.
+* @param {HitBox} shape2 - The second shape.
+* @return {bool} Returns true to confirm the collision, false to invalidate it.
+**/
+Scene.prototype.collide = function (direction, shape1, shape2) {
+  return true;
+};
+
+/**
 * @private {void} _loop - The scene loop. Uses requestAnimationFrame.
 **/
 Scene.prototype._loop = function () {
