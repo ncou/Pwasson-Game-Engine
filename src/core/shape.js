@@ -11,10 +11,14 @@ var HitBox = {
 * @class Shape - Defines a basic shape. Used for drawing correct sprite shape.
 *                Also used as a hitbox is sprite.physic = true.
 * @param {HitBox} hitbox - The shape form.
+* @param {Vector} position - The shape position within the sprite.
 * @param {Vector} size - The shape size.
+* @param {Array[Vector]} points - The shape points. Used only for polygons. Can be left null.
 **/
-function Shape (hitbox, size) {
+function Shape (hitbox, position, size, points) {
   this.hitbox = hitbox;
+  this.points = (points !== undefined) ? points : null;
+  this.position = position;
   this.size = size;
 }
 

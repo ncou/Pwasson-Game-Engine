@@ -25,7 +25,8 @@ SceneMain.prototype.populate = function () {
     alpha: .3,
     bgColor: 'red',
     rotation: 25,
-    canGoOffscreen: true
+    canGoOffscreen: true,
+    shape: { hitbox: Game.HitBox.CIRCLE }
   });
   this.diagBlock = new Game.Sprite(200, 200, 30, 30, 'player-lulz', { canGoOffscreen: true });
   

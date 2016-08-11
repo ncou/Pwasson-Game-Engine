@@ -43,7 +43,7 @@ function Sprite (x, y, width, height, texture, properties) {
   this.position = new Game.Vector(x, y);
   this.rotation = 0;
   this.size = new Game.Vector(width, height);
-  this.shape = new Game.Shape(Game.HitBox.RECTANGLE, this.size);
+  this.shape = new Game.Shape(Game.HitBox.RECTANGLE, this.position, this.size);
   this.speed = 20;
   this.static = false;
   this.texture = Game.Engine.getTexture(texture);
@@ -81,7 +81,23 @@ Sprite.prototype.draw = function (delta) {
         -(this.position.x + (this.size.x * this.anchor.x)),
         -(this.position.y + (this.size.y * this.anchor.y))
       );
-      Game.context.rect(this.position.x, this.position.y, this.size.x, this.size.y);
+      
+      switch (this.shape.hitbox) {
+        case Game.HitBox.RECTANGLE:
+          Game.context.rect(this.position.x, this.position.y, this.size.x, this.size.y);
+          break;
+        case Game.HitBox.CIRCLE:
+          Game.context.arc(this.position.x, this.position.y, this.size.x, 0, 2 * Math.PI);
+          break;
+        case Game.HitBox.POLYGON:
+          console.log('Polygon shape are not yet implemented. Use HitBox.RECTANGLE or HitBox.CIRCLE.');
+          break;
+        default:
+          console.log('Unknown shape. Please refer to Game.HitBox for a list of available shapes.');
+          break;
+      }
+      
+      
       if (this.bgColor !== null) {
         Game.context.fillStyle = this.bgColor;
         Game.context.fill();
@@ -117,7 +133,10 @@ Sprite.prototype.update = function (delta) {
 * @public {bool} positionChanged - Returns true if the position changed, false if not.
 **/
 Sprite.prototype.positionChanged = function () {
-  return !!((this.position.x == this.last.position.x) || (this.position.y == this.last.position.y));
+  return !!(
+    (this.position.x == this.last.position.x) ||
+    (this.position.y == this.last.position.y)
+  );
 };
 
 /**
@@ -131,14 +150,20 @@ Sprite.prototype.rotationChanged = function () {
 * @public {bool} sizeChanged - Returns true if the size changed, false if not.
 **/
 Sprite.prototype.sizeChanged = function () {
-  return !!((this.size.x == this.last.size.x) || (this.size.y == this.last.size.y));
+  return !!(
+    (this.size.x == this.last.size.x) ||
+    (this.size.y == this.last.size.y)
+  );
 };
 
 /**
 * @public {bool} isOffscreen - Returns true if the sprite is offscreen, false if not.
 **/
 Sprite.prototype.isOffscreen = function () {
-  return ((this.position.x > Game.Config.canvas.width) || (this.position.y > Game.Config.canvas.height));
+  return (
+    (this.position.x - this.size.x > Game.Config.canvas.width) ||
+    (this.position.y - this.size.y > Game.Config.canvas.height)
+  );
 };
 
 /**
