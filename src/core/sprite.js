@@ -43,7 +43,8 @@ function Sprite (x, y, width, height, texture, properties) {
   this.position = new Game.Vector(x, y);
   this.rotation = 0;
   this.size = new Game.Vector(width, height);
-  this.shape = new Game.Shape(Game.HitBox.RECTANGLE, this.position, this.size);
+  this.shape = Game.Shape.RECTANGLE;
+  this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
   this.speed = 20;
   this.static = false;
   this.texture = Game.Engine.getTexture(texture);
@@ -82,18 +83,18 @@ Sprite.prototype.draw = function (delta) {
         -(this.position.y + (this.size.y * this.anchor.y))
       );
       
-      switch (this.shape.hitbox) {
-        case Game.HitBox.RECTANGLE:
+      switch (this.shape) {
+        case Game.Shape.RECTANGLE:
           Game.context.rect(this.position.x, this.position.y, this.size.x, this.size.y);
           break;
-        case Game.HitBox.CIRCLE:
+        case Game.Shape.CIRCLE:
           Game.context.arc(this.position.x, this.position.y, this.size.x, 0, 2 * Math.PI);
           break;
-        case Game.HitBox.POLYGON:
-          console.log('Polygon shape are not yet implemented. Use HitBox.RECTANGLE or HitBox.CIRCLE.');
+        case Game.Shape.POLYGON:
+          console.log('Polygon shape are not yet implemented. Use Game.Shape.RECTANGLE or Game.Shape.CIRCLE.');
           break;
         default:
-          console.log('Unknown shape. Please refer to Game.HitBox for a list of available shapes.');
+          console.log('Unknown shape. Please refer to Game.Shape for a list of available shapes.');
           break;
       }
       
