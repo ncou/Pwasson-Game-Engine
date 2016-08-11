@@ -16,6 +16,8 @@ var Shape = {
 * @param {Array[Vector]} points - The shape points. Used only for polygons. Can be left null.
 **/
 function HitBox (shape, position, size, points) {
+  this._className = 'HitBox';
+
   this.shape = shape;
   this.points = (points !== undefined) ? points : null;
   this.position = position;

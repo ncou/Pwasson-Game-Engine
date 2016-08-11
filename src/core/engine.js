@@ -11,9 +11,11 @@ function Engine () {
     'game/config.js',
     'core/vector.js',
     'core/shape.js',
-    'core/scene.js',
     'core/sprite.js',
     'core/physics.js',
+    'core/physics/world.js',
+    'core/physics/collisionsolver.js',
+    'core/scene.js',
     'core/ui.js',
     'game/main.js'
   ];

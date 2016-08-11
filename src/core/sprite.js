@@ -30,6 +30,8 @@
 * @property {Object} base - The sprite base position, rotation and size.
 **/
 function Sprite (x, y, width, height, texture, properties) {
+  this._className = 'Sprite';
+
   this.alpha = 1;
   this.anchor = new Game.Vector(0.5, 0.5);
   this.bgColor = null;

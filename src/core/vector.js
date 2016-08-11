@@ -4,6 +4,8 @@
 * @param {int} y
 **/
 function Vector (x, y) {
+  this._className = 'Vector';
+
   this.x = x;
   this.y = y;
 }
