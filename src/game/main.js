@@ -31,7 +31,11 @@ SceneMain.prototype.init = function () {
 * @public populate - Add some childs to the scene, for demo only.
 **/
 SceneMain.prototype.populate = function () {
-  this.block = new Game.Sprite(50, 50, 100, 100, 'player-face', { canGoOffscreen: true });
+  this.block = new Game.Sprite(50, 50, 100, 100, 'player-face', {
+    canGoOffscreen: true,
+    physics: true,
+    gravityAffected: false
+  });
   this.littleBlock = new Game.Sprite(100, 200, 50, 50, 'player-duck', {
     alpha: .3,
     bgColor: 'red',
@@ -46,6 +50,11 @@ SceneMain.prototype.populate = function () {
     shape: Game.Shape.RECTANGLE,
     bgColor: 'lime'
   });
+  this.physicBlock2 = new Game.Sprite(250, 475, 30, 30, null, {
+    physics: true,
+    shape: Game.Shape.RECTANGLE,
+    borderColor: 'blue'
+  });
   this.staticBlock = new Game.Sprite(200, 500, 400, 30, null, {
     physics: true,
     static: true,
@@ -57,9 +66,12 @@ SceneMain.prototype.populate = function () {
   this.addChild(this.diagBlock);
   this.addChild(this.staticBlock);
   this.addChild(this.physicBlock);
+  this.addChild(this.physicBlock2);
   
   this.world.addChild(this.physicBlock);
+  this.world.addChild(this.physicBlock2);
   this.world.addChild(this.staticBlock);
+  this.world.addChild(this.block);
 };
 
 SceneMain.prototype.collide = function (dir, shape1, shape2) {

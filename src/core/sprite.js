@@ -39,6 +39,7 @@ function Sprite (x, y, width, height, texture, properties) {
   this.borderSize = 2;
   this.canGoOffscreen = false;
   this.fontColor = '#fff';
+  this.gravityAffected = true;
   this.layers = {};
   this.needsUpdate = true;
   this.physics = false;
