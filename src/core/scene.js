@@ -157,25 +157,6 @@ Scene.prototype.stop = function () {
   cancelAnimationFrame(this.raf);
 };
 
-/**
-* @public {void} resetChild - Reset position, size, rotation of a children.
-* @param {Object} child - The children object to reset.
-*
-* @note Doesn't works, that's a test.
-**/
-Scene.prototype.resetChild = function (child) {
-  if (typeof child !== 'object') return false;
-  if (this.childrens[child._index] === undefined) return false;
-
-  this.childrens[child._index].lock = true;
-  this.childrens[child._index].position.copy(this.childrens[child._index].base.position);
-  this.childrens[child._index].size.copy(this.childrens[child._index].base.size);
-  this.childrens[child._index].rotation = this.childrens[child._index].base.rotation;
-  this.childrens[child._index].lock = false;
-
-  this.childrens[child._index].needsUpdate = true;
-};
-
 // Export Scene as Game.Scene.
 Game.Scene = Scene;
 

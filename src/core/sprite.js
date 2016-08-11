@@ -125,7 +125,7 @@ Sprite.prototype.draw = function (delta) {
 Sprite.prototype.update = function (delta) {
   if (this.lock) return;
 
-  if (this.isOffscreen() && !this.canGoOffscreen && !this.static) {
+  if (this.isOffscreen() && !this.canGoOffscreen && !this.static && !this.needsUpdate) {
     console.log('Sprite', this._index, 'is offscreen, updating this sprite is not needed.');
     this.needsUpdate = false;
     return;
@@ -135,6 +135,16 @@ Sprite.prototype.update = function (delta) {
   
   // Keep the hitbox position updated.
   this.hitbox.position.copy(this.position);
+};
+
+/**
+* @public {void} reset - Reset the Sprite using base as a reference.
+**/
+Sprite.prototype.reset = function () {
+  this.position.copy(this.base.position);
+  this.size.copy(this.base.size);
+  this.rotation = this.base.rotation;
+  this.needsUpdate = true;
 };
 
 /**

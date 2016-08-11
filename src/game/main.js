@@ -97,6 +97,12 @@ SceneMain.prototype.update = function (delta) {
     this.physicBlock.rotation -= 200 / delta;
   }
 
+  if (this.physicBlock.isOffscreen()) {
+    this.physicBlock.velocity = new Game.Vector(0, 0);
+    this.physicBlock.rotation = 0;
+    this.physicBlock.position.x = 400;
+    this.physicBlock.position.y = 100;
+  }
 
   // If our first block goes offscreen, reset it's position.
   if (this.block.isOffscreen()) {
