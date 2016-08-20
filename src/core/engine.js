@@ -26,6 +26,7 @@ function Engine () {
   this._engineScripts = [
     'game/config.js',
     'core/vector.js',
+    'core/container.js',
     'core/shape.js',
     'core/sprite.js',
     'core/physics.js',
