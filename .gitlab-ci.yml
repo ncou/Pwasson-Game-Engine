@@ -1,7 +1,12 @@
 pages:
+  script:
+  - mkdir .public
+  - cp index.html .public
+  - cp LICENSE .public/LICENSE
+  - cp -r src/ .public/src/
+  - mv .public public
   artifacts:
     paths:
-    - index.html
-    - src
+    - public
   only:
   - master
