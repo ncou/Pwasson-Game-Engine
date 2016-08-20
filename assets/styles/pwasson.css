@@ -6,7 +6,10 @@ html, body {
   margin: 0 auto;
   padding: 0;
   
-  background-color: #171717;
+  display: flex;
+  flex-direction: column;
+  
+  background-color: #444;
   font-family: Aller, Verdana, sans-serif;
 }
 
@@ -19,9 +22,18 @@ html, body {
   border: 3px solid #000000;
 }
 
-a#gitlab {
-  display: block;
-  margin: 5px auto;
+#gitlab {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  align-self: center;
+  text-align: center;
+}
+#gitlab a {
+  display: flex;
+  margin: 5px;
 
   font-size: 16px;
   color: lime;
