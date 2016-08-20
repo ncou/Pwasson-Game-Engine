@@ -20,7 +20,6 @@ SceneMain.prototype.constructor = SceneMain;
 * @public {void} init - Initialize the scene.
 **/
 SceneMain.prototype.init = function () {
-  console.log('SceneMain extends Scene');
   this.jumping = false;
   this.blocks = [];
   this.maxBlocks = 50;
@@ -57,7 +56,42 @@ SceneMain.prototype.init = function () {
     physics: true,
     shape: Game.Shape.RECTANGLE,
     bgColor: 'lime',
+    buttonMode: true,
+    selected: false
   });
+  
+  this.player.onMouseHover = function (pos) {
+    // WARN: Here, `this` refer to the player instance.
+    this.borderSize = 2;
+    this.borderColor = 'black';
+    this.bgColor = 'yellow';
+    this.alpha = 1;
+  };
+  
+  this.player.onMouseOut = function () {
+    // WARN: Here, `this` refer to the player instance.
+    this.borderSize = 0;
+    this.borderColor = null;
+    this.bgColor = 'lime';
+    this.alpha = 1;
+  };
+  
+  this.player.onMouseDown = function (button, position) {
+    // WARN: Here, `this` refer to the player instance.    
+    if (this.selected === false) {
+      this.borderSize = 2;
+      this.borderColor = 'black';
+      this.bgColor = 'red';
+      this.alpha = 1;
+      this.selected = true;
+    } else {
+      this.borderSize = 0;
+      this.borderColor = null;
+      this.bgColor = 'lime';
+      this.alpha = 1;
+      this.selected = false;
+    }
+  };
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);

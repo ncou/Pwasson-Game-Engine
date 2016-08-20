@@ -3,6 +3,7 @@
 *
 * @property {HTMLCanvasElement} canvas - The game canvas.
 * @property {Scene} scene - The current game scene.
+* @property (readOnly) {Vector} mouse - The actual mouse position. Can be used in loops.
 **/
 function Engine () {
   this._textures = {};
@@ -22,6 +23,7 @@ function Engine () {
 
   this.canvas = null;
   this.scene  = null;
+  this.mouse = { x: 0, y: 0 };
 
   // Let's load our engine scripts.
   this._loadScripts(this._engineScripts, this._init.bind(this));
@@ -47,6 +49,7 @@ Engine.prototype._init = function () {
     this.canvas.localName + '#' + this.canvas.id;
 
   console.log('~ Pwasson Engine started (' + canvasDescriptor + ') ~');
+  this._initEvents();
 
   this.setScene(new SceneMain('Main'));
 };
@@ -81,6 +84,41 @@ Engine.prototype._loadScripts = function (scripts, callback) {
 
     document.body.appendChild(elements[path]);
   }
+};
+
+/**
+* @public {Vector} getMousePos - Get the mouse position from an event taking in consideration the canvas position.
+* @param {Event} event - The click event.
+**/
+Engine.prototype.getMousePos = function (event) {
+  var rect = this.canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+};
+
+/**
+* @private {void} _initEvents - Initialize the canvas events and dispatch them.
+**/
+Engine.prototype._initEvents = function () {
+  this.canvas.addEventListener('mousedown', function (e) {
+    this.scene.onMouseDown(e.buttons, this.getMousePos(e));
+  }.bind(this), false);
+  
+  this.canvas.addEventListener('mouseup', function (e) {
+    this.scene.onMouseRelease(e.buttons, this.getMousePos(e));
+  }.bind(this), false);
+  
+  this.canvas.addEventListener('mousemove', function (e) {
+    this.mouse = this.getMousePos(e);
+    this.scene.onMouseHover(this.mouse);
+  }.bind(this), false);
+  
+  this.canvas.addEventListener('mouseout', function (e) {
+    this.mouse = this.getMousePos(e);
+    this.scene.onMouseOut(e.buttons, this.mouse);
+  }.bind(this), false);
 };
 
 /**
@@ -121,6 +159,13 @@ if (Game === undefined) {
   };
 };
 
+/**
+* @public {void} setCursor - Set the cursor style.
+* @param {String} cursor - The cursor style.
+**/
+Game.setCursor = function (cursor) {
+  Game.Engine.canvas.style.cursor = cursor;
+};
 
 /**
 * @public {Object} merge - Merge objects.

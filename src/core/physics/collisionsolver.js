@@ -52,14 +52,14 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
         collisionDirection = Game.Physics.CollisionDirection.TOP;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
-          shape1.position.y = oY;
+          //shape1.position.y = oY;
         }
       } else {
         collisionDirection = Game.Physics.CollisionDirection.BOTTOM;
         // If the collide method returns true, we apply the collision, else we just giveup.
         if (Game.Engine.scene.collide(collisionDirection, shape1, shape2)) {
           shape1.position.y -= oY;
-          shape1.velocity.y = 0;
+          //shape1.velocity.y = 0;
         }
       }
     } else {

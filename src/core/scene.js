@@ -1,3 +1,14 @@
+window.requestAnimFrame = (function(callback) {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
 /**
 * @class Scene - Defines a simple game scene that can contains childrens.
 *
@@ -89,31 +100,6 @@ Scene.prototype.removeChild = function (index) {
 };
 
 /**
-* @public {void} update - The scene update function. MUST be used by extended scenes instead of _loop.
-* @param {int} delta - Scene's delta time.
-**/
-Scene.prototype.update = function (delta) {};
-
-/**
-* @public {void} onClick - Function that gets called when the canvas got clicked.
-* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
-* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
-**/
-Scene.prototype.onClick = function (position) {};
-
-/**
-* @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.
-* @event This function only gets called from the CollisionSolver, you shouldn't trigger it manually.
-* @param {Physics.CollisionDirection} direction - The collision direction.
-* @param {HitBox} shape1 - The first shape. This shape is the one that collided.
-* @param {HitBox} shape2 - The second shape.
-* @return {bool} Returns true to confirm the collision, false to invalidate it.
-**/
-Scene.prototype.collide = function (direction, shape1, shape2) {
-  return true;
-};
-
-/**
 * @private {void} _loop - The scene loop. Uses requestAnimationFrame.
 **/
 Scene.prototype._loop = function () {
@@ -163,6 +149,75 @@ Scene.prototype._loop = function () {
 **/
 Scene.prototype.stop = function () {
   cancelAnimationFrame(this.raf);
+};
+
+/**
+* @public {void} update - The scene update function. MUST be used by extended scenes instead of _loop.
+* @param {int} delta - Scene's delta time.
+**/
+Scene.prototype.update = function (delta) {};
+
+/**
+* @public {void} onMouseDown - Function that gets called when the canvas got clicked.
+* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Scene.prototype.onMouseDown = function (button, position) {
+  /**
+  * Let simply loop over every childrens this scene has.
+  * If the mouse click has happened into a child, let's tell this sprite it got a click.
+  **/
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i].isMouseHover()) {
+      this.childrens[i].onMouseDown(button, position);
+      return;
+    }
+  }
+};
+
+/**
+* @public {void} onMouseRelease - Function that gets called when the sprite click got released.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Scene.prototype.onMouseRelease = function (button, position) {
+  /**
+  * Let simply loop over every childrens this scene has.
+  * If the mouse click has happened into a child, let's tell this sprite it got a click.
+  **/
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i].isMouseHover()) {
+      this.childrens[i].onMouseRelease(button, position);
+      return;
+    }
+  }
+};
+
+/**
+* @public {void} onMouseHover - Function that gets called when the canvas got hovered.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+* @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
+**/
+Scene.prototype.onMouseHover = function (position) {};
+
+/**
+* @public {void} onMouseOut - Function that gets called when the mouse goes off the canvas.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+**/
+Scene.prototype.onMouseOut = function (button, position) {};
+
+/**
+* @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.
+* @event This function only gets called from the CollisionSolver, you shouldn't trigger it manually.
+* @param {Physics.CollisionDirection} direction - The collision direction.
+* @param {HitBox} shape1 - The first shape. This shape is the one that collided.
+* @param {HitBox} shape2 - The second shape.
+* @return {bool} Returns true to confirm the collision, false to invalidate it.
+**/
+Scene.prototype.collide = function (direction, shape1, shape2) {
+  return true;
 };
 
 // Export Scene as Game.Scene.

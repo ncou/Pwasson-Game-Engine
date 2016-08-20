@@ -13,12 +13,15 @@
 * @property {string|Color} bgColor - The sprite background color. If null, no background will be drawn.
 * @property {string|Color} borderColor - The sprite border color. If null, no border will be drawn.
 * @property {int} borderSize - The sprite border size. If 0, no border will be drawn.
+* @property {bool} buttonMode - If true, once the sprite got hovered, cursor changes to pointer.
 * @property {bool} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
 * @property {string|Color} fontColor - Used if the sprite contains some text.
+* @property {int} friction - The sprite friction, used in physics.
 * @property {Object} layers - The different layers used to animate the sprite.
 * @property {bool} needsUpdate - If true the sprite will be update, else it wont.
 * @property {bool} physics - If true the sprite will be given a hitbox and will be able to use the scene physic world.
 * @property {Vector} position - The sprite position.
+* @property {int} restitution - The sprite restitution, used in physics.
 * @property {int} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
 * @property {Shape} shape - The sprite shape. Used for drawing, also used for physics as the hitbox.
 * @property {Vector} size - The sprite size. size.x = width, size.y = height.
@@ -37,6 +40,7 @@ function Sprite (x, y, width, height, texture, properties) {
   this.bgColor = null;
   this.borderColor = 'lime';
   this.borderSize = 2;
+  this.buttonMode = false;
   this.canGoOffscreen = false;
   this.fontColor = '#fff';
   this.friction = 0.2;
@@ -135,6 +139,18 @@ Sprite.prototype.draw = function (delta) {
 **/
 Sprite.prototype.update = function (delta) {
   if (this.lock) return;
+  
+  if (this.isMouseHover()) {
+    if (this.buttonMode) {
+      Game.setCursor('pointer');
+    }
+    this.onMouseHover(Game.Engine.mouse);
+  } else {
+    if (this.buttonMode) {
+      Game.setCursor('default');
+    }
+    this.onMouseOut();
+  }
 
   if (this.isOffscreen() && !this.canGoOffscreen && !this.static && !this.needsUpdate) {
     console.log('Sprite', this._index, 'is offscreen, updating this sprite is not needed.');
@@ -147,6 +163,35 @@ Sprite.prototype.update = function (delta) {
   // Keep the hitbox position updated.
   this.hitbox.position.copy(this.position);
 };
+
+/**
+* @public {void} onMouseDown - Function that gets called when the sprite got clicked.
+* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Sprite.prototype.onMouseDown = function (button, position) {};
+
+/**
+* @public {void} onMouseRelease - Function that gets called when the sprite click got released.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Sprite.prototype.onMouseRelease = function (button, position) {};
+
+/**
+* @public {void} onMouseHover - Function that gets called when the sprite got hovered.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+* @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
+**/
+Sprite.prototype.onMouseHover = function (position) {};
+
+/**
+* @public {void} onMouseOut - Function that gets called when the mouse goes off the sprite.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+**/
+Sprite.prototype.onMouseOut = function () {};
 
 /**
 * @public {void} reset - Reset the Sprite using base as a reference.
@@ -193,6 +238,27 @@ Sprite.prototype.isOffscreen = function () {
     (this.position.x - this.size.x > Game.Config.canvas.width) ||
     (this.position.y - this.size.y > Game.Config.canvas.height)
   );
+};
+
+/**
+* @public {bool} isMouseHover - Returns true if the mouse is hover the sprite, false if not.
+**/
+Sprite.prototype.isMouseHover = function (mousePosition) {
+  if (mousePosition === undefined) {
+    return (
+      (this.position.y <= Game.Engine.mouse.y) &&
+      (Game.Engine.mouse.y <= this.position.y + this.size.y) &&
+      (this.position.x <= Game.Engine.mouse.x) &&
+      (Game.Engine.mouse.x <= this.position.x + this.size.x)
+    );
+  } else {
+    return (
+      (this.position.y <= mousePosition.y) &&
+      (mousePosition.y <= this.position.y + this.size.y) &&
+      (this.position.x <= mousePosition.x) &&
+      (mousePosition.x <= this.position.x + this.size.x)
+    );
+  }
 };
 
 /**
