@@ -124,7 +124,6 @@ SceneMain.prototype.update = function (delta) {
     this.player.velocity = new Game.Vector(0, 0);
     this.player.rotation = 0;
     this.player.position.copy(this.player.base.position);
-    console.log('Base', this.player.base.position, 'Current', this.player.position);
   }
   
   /**
