@@ -4,6 +4,7 @@ pages:
   - cp index.html .public
   - cp LICENSE .public/LICENSE
   - cp -r src/ .public/src/
+  - cp -r assets/ .public/assets/
   - mv .public public
   artifacts:
     paths:
