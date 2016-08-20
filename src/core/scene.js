@@ -121,7 +121,7 @@ Scene.prototype._loop = function () {
 
     Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
 
-    Game.context.fillText('FPS: ' + this.fps, 10, 20);
+    Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);
 
     // Run the scene update method.
     this.update(this.delta);

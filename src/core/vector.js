@@ -1,18 +1,20 @@
 /**
 * @struct Vector
+* @note If no arguments are given on new, x and y will defaults to 0.
 * @param {int} x
 * @param {int} y
 **/
 function Vector (x, y) {
   this._className = 'Vector';
 
-  this.x = x;
-  this.y = y;
+  this.x = x || 0;
+  this.y = y || 0;
 }
 
 /**
-* @public {void} copy - Copy a vector into this.
+* @public {Vector} copy - Copy a vector into this.
 * @param {Vector} source - The vector to copy from.
+* @return Returns this.
 **/
 Vector.prototype.copy = function (source) {
   if (typeof source !== 'object') return;
@@ -20,11 +22,14 @@ Vector.prototype.copy = function (source) {
 
   this.x = source.x;
   this.y = source.y;
+  
+  return this;
 };
 
 /**
-* @public {void} add - Addition this with a given vector.
+* @public {Vector} add - Addition this with a given vector.
 * @param {Vector} source - The vector to addtionate from.
+* @return Returns this.
 **/
 Vector.prototype.add = function (source) {
   if (typeof source !== 'object') return;
@@ -32,11 +37,14 @@ Vector.prototype.add = function (source) {
 
   this.x += source.x;
   this.y += source.y;
+  
+  return this;
 };
 
 /**
-* @public {void} sub - Substract this with a given vector.
+* @public {Vector} sub - Substract this with a given vector.
 * @param {Vector} source - The vector to substract from.
+* @return Returns this.
 **/
 Vector.prototype.sub = function (source) {
   if (typeof source !== 'object') return;
@@ -44,11 +52,14 @@ Vector.prototype.sub = function (source) {
 
   this.x -= source.x;
   this.y -= source.y;
+  
+  return this;
 };
 
 /**
-* @public {void} multiply - Multiply this with a given vector.
-* @param {Vector} source - The vector to multiply from
+* @public {Vector} multiply - Multiply this with a given vector.
+* @param {Vector} source - The vector to multiply from.
+* @return Returns this.
 **/
 Vector.prototype.multiply = function (source) {
   if (typeof source !== 'object') return;
@@ -56,11 +67,14 @@ Vector.prototype.multiply = function (source) {
 
   this.x *= source.x;
   this.y *= source.y;
+  
+  return this;
 };
 
 /**
-* @public {void} divide - Divide this with a given vector.
-* @param {Vector} source - The vector to divide from
+* @public {Vector} divide - Divide this with a given vector.
+* @param {Vector} source - The vector to divide from.
+* @return Returns this.
 **/
 Vector.prototype.divide = function (source) {
   if (typeof source !== 'object') return;
@@ -68,6 +82,8 @@ Vector.prototype.divide = function (source) {
 
   this.x /= source.x;
   this.y /= source.y;
+  
+  return this;
 };
 
 // Export Vector as Game.Vector.

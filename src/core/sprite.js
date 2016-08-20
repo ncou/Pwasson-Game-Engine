@@ -27,7 +27,7 @@
 * @property {Texture} texture - The sprite texture.
 * @property {Vector} velocity - The sprite velocity. Used for physics.
 * @property {Object} last - The sprite last position, rotation and size.
-* @property {Object} base - The sprite base position, rotation and size.
+* @property {Object} base - The sprite base position, rotation and size. MUST never be updated. (readOnly)
 **/
 function Sprite (x, y, width, height, texture, properties) {
   this._className = 'Sprite';
@@ -52,8 +52,16 @@ function Sprite (x, y, width, height, texture, properties) {
   this.static = false;
   this.texture = Game.Engine.getTexture(texture);
   this.velocity = new Game.Vector(0, 0);
-  this.last = { position: this.position, rotation: this.rotation, size: this.size };
-  this.base = this.last;
+  this.last = {
+    position: this.position,
+    rotation: this.rotation,
+    size: this.size
+  };
+  this.base = {
+    position: new Game.Vector(x, y),
+    rotation: this.rotation,
+    size: new Game.Vector(width, height)
+  };
   
   Game.merge(this, properties);
   this.hitbox = new Game.HitBox(this.shape, this.position, this.size);

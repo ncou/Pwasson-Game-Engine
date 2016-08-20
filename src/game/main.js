@@ -1,13 +1,13 @@
 function SceneMain (name) {
   // Extends this from Game.Scene.
   Game.Scene.call(this, name);
-  
+
   this.keys = [];
-  
+
   this.init();
 }
 
-// Javascript shit to extend...
+// Javascript shit to extend another "class"...
 SceneMain.prototype = Object.create(Game.Scene.prototype);
 SceneMain.prototype.constructor = SceneMain;
 
@@ -18,46 +18,47 @@ SceneMain.prototype.init = function () {
   console.log('SceneMain extends Scene');
   this.jumping = false;
   this.blocks = [];
-  this.maxBlocks = 150;
-  
-  // Ugly, just for the demo.
+  this.maxBlocks = 50;
+
+  // On keydown, set the key to true (pressed).
   document.addEventListener('keydown', function (e) {
     if (this.keys[e.keyCode]) return;
     this.keys[e.keyCode] = true;
   }.bind(this));
+
+  // On keyup, set the key to false (not pressed).
   document.addEventListener('keyup', function (e) {
     if (!this.keys[e.keyCode]) return;
     this.keys[e.keyCode] = false;
   }.bind(this));
-  
+
   // Let's init our world.
   this.addWorld();
-  
-  
-  
-  
+
+  // Let's add some more physic blocks.
   this.populate(this.maxBlocks);
+
+  // Let's draw a ground, we don't want blocks to fall forever.
   this.ground = new Game.Sprite(100, 500, 600, 30, null, {
     physics: true,
     static: true,
     borderColor: 'red',
     shape: Game.Shape.RECTANGLE
   });
+
+  // Now we add a player sprite, that'll be able to move and jump!
   this.player = new Game.Sprite(400, 100, 30, 30, 'physic', {
+    name: 'player', // We define a name, for later in collision.
     physics: true,
     shape: Game.Shape.RECTANGLE,
     bgColor: 'lime',
   });
-  
-  
+
+  // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);
   this.addChild(this.player);
   this.world.addChild(this.ground);
   this.world.addChild(this.player);
-  
-  //setInterval(function () {
-  
-  //}.bind(this), 5000);
 };
 
 /**
@@ -67,10 +68,11 @@ SceneMain.prototype.populate = function (count) {
   for (var i = 0; i < count; i++) {
     var x = 100 + Math.floor(Math.random() * 600);
     var y = 50  + Math.floor(Math.random() * 400);
-    var size = Math.floor(Math.random() * 25);
-    //var shape = (Math.random() > 0.5) ? Game.Shape.RECTANGLE : Game.Shape.CIRCLE;
+    var width = Math.floor(Math.random() * 100);
+    var height = Math.floor(Math.random() * 100);
+
     var shape = Game.Shape.RECTANGLE;
-    this.blocks.push(new Game.Sprite(x, y, size, size, null, {
+    this.blocks.push(new Game.Sprite(x, y, width, height, null, {
       type: 'block',
       physics: true,
       shape: shape,
@@ -87,7 +89,7 @@ SceneMain.prototype.collide = function (dir, shape1, shape2) {
     shape1.velocity.y = 0;
     shape2.velocity.y = 0;
 
-    if (shape1.texture == 'physic') {
+    if (shape1.name == 'player') {
       this.jumping = false;
     }
   }
@@ -109,13 +111,6 @@ SceneMain.prototype.keyboard = function (delta) {
     this.player.velocity.x -= 10;
     this.player.rotation -= 200 / delta;
   }
-
-  if (this.player.isOffscreen()) {
-    this.player.velocity = new Game.Vector(0, 0);
-    this.player.rotation = 0;
-    this.player.position.x = 400;
-    this.player.position.y = 100;
-  }
 };
 
 /**
@@ -124,6 +119,13 @@ SceneMain.prototype.keyboard = function (delta) {
 **/
 SceneMain.prototype.update = function (delta) {
   this.keyboard(delta);
+  
+  if (this.player.isOffscreen()) {
+    this.player.velocity = new Game.Vector(0, 0);
+    this.player.rotation = 0;
+    this.player.position.copy(this.player.base.position);
+    console.log('Base', this.player.base.position, 'Current', this.player.position);
+  }
   
   for (var i = 0; i < this.blocks.length; i++) {
     if (this.blocks[i].isOffscreen()) {
