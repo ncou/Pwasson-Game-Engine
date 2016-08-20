@@ -1,4 +1,19 @@
 /**
+* @public {Function} requestAnimateFrame - Shim for having requestAnimationFrame to work on every browser.
+* @fallback Fallback to setInterval on browsers that doesn't supports requestAnimationFrame.
+**/
+window.requestAnimateFrame = (function(callback) {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
+/**
 * @class Engine - Pwasson engine!
 *
 * @property {HTMLCanvasElement} canvas - The game canvas.
@@ -138,8 +153,8 @@ Engine.prototype.getTexture = function (textureName) {
 * @param {Scene} scene - The scene object.
 **/
 Engine.prototype.setScene = function (scene) {
-  if (typeof scene !== 'object') return;
-  if (scene._className != 'Scene') return;
+  if (typeof scene !== 'object') throw 'Scene "' + scene + '" is not an Object.';
+  if (scene._className != 'Scene') throw 'Scene "' + scene + '" is not a Scene.';
 
   this.scene = scene;
 };

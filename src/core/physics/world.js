@@ -65,8 +65,8 @@ World.prototype._update = function (delta) {
 * @param {Sprite} sprite - The sprite to be added to the world.
 **/
 World.prototype.addChild = function (sprite) {
-  if (typeof sprite !== 'object') return false;
-  if (sprite._className !== 'Sprite') return false;
+  if (typeof sprite !== 'object') throw 'Child is not an Object.';
+  if (sprite._className !== 'Sprite') return 'Child is not a Sprite.';
 
   sprite._worldIndex = this.childrens.length;
   sprite._world = this;
@@ -87,7 +87,7 @@ World.prototype.addChild = function (sprite) {
 * @param {int} index - The children index. (sprite._worldIndex)
 **/
 World.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) return false;
+  if (this.childrens[index] === undefined) throw 'Child at index ' + index + ' doesn\'t exists.';
 
   this.childrens.splice(index, 1);
   if (this.childrens[index] === undefined) {

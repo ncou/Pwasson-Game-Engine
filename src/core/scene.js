@@ -1,14 +1,3 @@
-window.requestAnimFrame = (function(callback) {
-  return window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function(callback) {
-      window.setTimeout(callback, 1000 / 60);
-    };
-})();
-
 /**
 * @class Scene - Defines a simple game scene that can contains childrens.
 *
@@ -65,7 +54,8 @@ Scene.prototype.addWorld = function (gravity, properties) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.addChild = function (child) {
-  if (typeof child !== 'object') return false;
+  if (typeof child !== 'object') throw 'Child is not an Object.';
+  if (child._className != 'Sprite') throw 'Child is not a Sprite.';
 
   child._index = this.childrens.length;
   child._parent = this;
@@ -89,7 +79,7 @@ Scene.prototype.addChild = function (child) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) return false;
+  if (this.childrens[index] === undefined) throw 'Child at index ' + index + ' doesn\'t exists.';
 
   this.childrens.splice(index, 1);
 
@@ -103,8 +93,8 @@ Scene.prototype.removeChild = function (index) {
 * @private {void} _loop - The scene loop. Uses requestAnimationFrame.
 **/
 Scene.prototype._loop = function () {
-  // Let's run requestAnimationFrame.
-  this.raf = requestAnimationFrame(this._loop.bind(this));
+  // Let's run requestAnimateFrame (@see engine.js:0).
+  this.raf = requestAnimateFrame(this._loop.bind(this));
 
   this._now = Date.now();
   this.delta = this._now - this._then;

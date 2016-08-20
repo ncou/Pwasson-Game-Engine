@@ -47,7 +47,8 @@ SceneMain.prototype.init = function () {
     physics: true,
     static: true,
     borderColor: 'red',
-    shape: Game.Shape.RECTANGLE
+    shape: Game.Shape.RECTANGLE,
+    buttonMode: true,
   });
 
   // Now we add a player sprite, that'll be able to move and jump!
@@ -60,7 +61,7 @@ SceneMain.prototype.init = function () {
     selected: false
   });
   
-  this.player.onMouseHover = function (pos) {
+  this.ground.onMouseHover = function (pos) {
     // WARN: Here, `this` refer to the player instance.
     this.borderSize = 2;
     this.borderColor = 'black';
@@ -68,29 +69,29 @@ SceneMain.prototype.init = function () {
     this.alpha = 1;
   };
   
-  this.player.onMouseOut = function () {
+  this.ground.onMouseOut = function () {
     // WARN: Here, `this` refer to the player instance.
-    this.borderSize = 0;
-    this.borderColor = null;
-    this.bgColor = 'lime';
-    this.alpha = 1;
+    //this.borderSize = 0;
+    //this.borderColor = null;
+    //this.bgColor = 'lime';
+    //this.alpha = 1;
   };
   
-  this.player.onMouseDown = function (button, position) {
-    // WARN: Here, `this` refer to the player instance.    
-    if (this.selected === false) {
-      this.borderSize = 2;
-      this.borderColor = 'black';
-      this.bgColor = 'red';
-      this.alpha = 1;
-      this.selected = true;
-    } else {
-      this.borderSize = 0;
-      this.borderColor = null;
-      this.bgColor = 'lime';
-      this.alpha = 1;
-      this.selected = false;
+  this.ground.onMouseDown = function (button, position) {
+    // WARN: Here, `this` refer to the player instance.
+    // First we check if the click is valid, even if this should never happens. Doesn't cost many things.
+    if (this.isMouseHover() === false) {
+      return;
     }
+    
+    this.borderSize = 2;
+    this.borderColor = 'black';
+    this.bgColor = 'red';
+    this.alpha = 1;
+    this.needsUpdate = true;
+    
+    console.log('Player clicked.');
+    return;
   };
 
   // Finally, add the blocks to both the scene and the physical world.

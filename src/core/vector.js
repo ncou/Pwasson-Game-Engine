@@ -17,8 +17,8 @@ function Vector (x, y) {
 * @return Returns this.
 **/
 Vector.prototype.copy = function (source) {
-  if (typeof source !== 'object') return;
-  if (source._className !== 'Vector') return;
+  if (typeof source !== 'object') throw 'Source Vector is not an Object.';
+  if (source._className !== 'Vector') throw 'Source Vector is not a Vector.';
 
   this.x = source.x;
   this.y = source.y;
@@ -32,8 +32,8 @@ Vector.prototype.copy = function (source) {
 * @return Returns this.
 **/
 Vector.prototype.add = function (source) {
-  if (typeof source !== 'object') return;
-  if (source._className !== 'Vector') return;
+  if (typeof source !== 'object') throw 'Source Vector is not an Object.';
+  if (source._className !== 'Vector') throw 'Source Vector is not a Vector.';
 
   this.x += source.x;
   this.y += source.y;
@@ -47,8 +47,8 @@ Vector.prototype.add = function (source) {
 * @return Returns this.
 **/
 Vector.prototype.sub = function (source) {
-  if (typeof source !== 'object') return;
-  if (source._className !== 'Vector') return;
+  if (typeof source !== 'object') throw 'Source Vector is not an Object.';
+  if (source._className !== 'Vector') throw 'Source Vector is not a Vector.';
 
   this.x -= source.x;
   this.y -= source.y;
@@ -62,8 +62,8 @@ Vector.prototype.sub = function (source) {
 * @return Returns this.
 **/
 Vector.prototype.multiply = function (source) {
-  if (typeof source !== 'object') return;
-  if (source._className !== 'Vector') return;
+  if (typeof source !== 'object') throw 'Source Vector is not an Object.';
+  if (source._className !== 'Vector') throw 'Source Vector is not a Vector.';
 
   this.x *= source.x;
   this.y *= source.y;
@@ -77,8 +77,8 @@ Vector.prototype.multiply = function (source) {
 * @return Returns this.
 **/
 Vector.prototype.divide = function (source) {
-  if (typeof source !== 'object') return;
-  if (source._className !== 'Vector') return;
+  if (typeof source !== 'object') throw 'Source Vector is not an Object.';
+  if (source._className !== 'Vector') throw 'Source Vector is not a Vector.';
 
   this.x /= source.x;
   this.y /= source.y;
