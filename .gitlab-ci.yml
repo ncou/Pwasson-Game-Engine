@@ -1,0 +1,7 @@
+pages:
+  artifacts:
+    paths:
+    - index.html
+    - src
+  only:
+  - master
