@@ -86,10 +86,11 @@ Engine.prototype._loadScripts = function (scripts, callback) {
 * @param {string} textureName
 **/
 Engine.prototype.getTexture = function (textureName) {
-  if (this._textures[textureName] !== undefined) {
+  /*if (this._textures[textureName] !== undefined) {
     return this._textures[textureName];
   }
-  return false;
+  return false;*/
+  return textureName;
 };
 
 /**

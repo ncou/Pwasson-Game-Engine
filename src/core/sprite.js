@@ -54,8 +54,9 @@ function Sprite (x, y, width, height, texture, properties) {
   this.velocity = new Game.Vector(0, 0);
   this.last = { position: this.position, rotation: this.rotation, size: this.size };
   this.base = this.last;
-
+  
   Game.merge(this, properties);
+  this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
 
   this._init();
 };

@@ -50,7 +50,7 @@ World.prototype._update = function (delta) {
         for (var j = 0; j < this.childrens.length; j++) {
           var oChild = this.childrens[j];
           if (oChild != child) {
-            this._solver.RectangleRectangle(child, oChild);
+            this._solver.solve(child, oChild);
           }
         }
         
