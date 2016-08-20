@@ -15,9 +15,15 @@ html, body {
 }
 
 #pwasson {
-  /*width: 800px;
-  height: 400px;*/
-  margin: 20px auto 0 auto;
-
+  margin: 0 auto;
   border: 3px solid #000000;
+}
+
+a#gitlab {
+  display: block;
+  margin: 5px auto;
+
+  font-size: 16px;
+  color: lime;
+  text-align: center;
 }
