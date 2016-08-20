@@ -95,7 +95,15 @@ Scene.prototype.removeChild = function (index) {
 Scene.prototype.update = function (delta) {};
 
 /**
+* @public {void} onClick - Function that gets called when the canvas got clicked.
+* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Scene.prototype.onClick = function (position) {};
+
+/**
 * @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.
+* @event This function only gets called from the CollisionSolver, you shouldn't trigger it manually.
 * @param {Physics.CollisionDirection} direction - The collision direction.
 * @param {HitBox} shape1 - The first shape. This shape is the one that collided.
 * @param {HitBox} shape2 - The second shape.

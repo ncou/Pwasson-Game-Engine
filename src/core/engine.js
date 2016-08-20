@@ -2,10 +2,10 @@
 * @class Engine - Pwasson engine!
 *
 * @property {HTMLCanvasElement} canvas - The game canvas.
+* @property {Scene} scene - The current game scene.
 **/
 function Engine () {
-  this.canvas = null;
-
+  this._textures = {};
   this._rootPath = 'src';
   this._engineScripts = [
     'game/config.js',
@@ -19,7 +19,9 @@ function Engine () {
     'core/ui.js',
     'game/main.js'
   ];
-  this._textures = {};
+
+  this.canvas = null;
+  this.scene  = null;
 
   // Let's load our engine scripts.
   this._loadScripts(this._engineScripts, this._init.bind(this));

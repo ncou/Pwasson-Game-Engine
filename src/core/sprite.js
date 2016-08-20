@@ -39,11 +39,13 @@ function Sprite (x, y, width, height, texture, properties) {
   this.borderSize = 2;
   this.canGoOffscreen = false;
   this.fontColor = '#fff';
+  this.friction = 0.2;
   this.gravityAffected = true;
   this.layers = {};
   this.needsUpdate = true;
   this.physics = false;
   this.position = new Game.Vector(x, y);
+  this.restitution = 0.3;
   this.rotation = 0;
   this.size = new Game.Vector(width, height);
   this.shape = Game.Shape.RECTANGLE;

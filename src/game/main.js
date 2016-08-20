@@ -1,3 +1,8 @@
+/**
+* @class SceneMain
+* @extends Scene
+* @param {String} name - The scene name, used for debug.
+**/
 function SceneMain (name) {
   // Extends this from Game.Scene.
   Game.Scene.call(this, name);
@@ -63,6 +68,7 @@ SceneMain.prototype.init = function () {
 
 /**
 * @public populate - Add some childs to the scene, for demo only.
+* @param {int} count - The number of childs to add.
 **/
 SceneMain.prototype.populate = function (count) {
   for (var i = 0; i < count; i++) {
@@ -84,6 +90,13 @@ SceneMain.prototype.populate = function (count) {
   }
 };
 
+/**
+* @public {bool} collide - Collide method, called whenever two shapes collides.
+* @param {Physic.CollisionDirection} dir - The collision direction.
+* @param {Sprite} shape1 - The shape that triggered the collision.
+* @param {Sprite} shape2 - The shape that is collided against.
+* @return Return true to make both shape to collide, false to not stop the collision.
+**/
 SceneMain.prototype.collide = function (dir, shape1, shape2) {
   if (dir == Game.Physics.CollisionDirection.BOTTOM) {
     shape1.velocity.y = 0;
@@ -96,6 +109,10 @@ SceneMain.prototype.collide = function (dir, shape1, shape2) {
   return true;
 }
 
+/**
+* @public {void} keyboard - Method to handle the keyboard events.
+* @param {double} delta - The scene delta time.
+**/
 SceneMain.prototype.keyboard = function (delta) {
   if (this.keys[38] || this.keys[32] || this.keys[87] || this.keys[90]) {
     if (this.jumping == false) {
