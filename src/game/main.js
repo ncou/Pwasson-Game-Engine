@@ -127,12 +127,15 @@ SceneMain.prototype.update = function (delta) {
     console.log('Base', this.player.base.position, 'Current', this.player.position);
   }
   
-  for (var i = 0; i < this.blocks.length; i++) {
+  /**
+  * TODO: Debug the remove() method.
+  **/
+  /*for (var i = 0; i < this.blocks.length; i++) {
     if (this.blocks[i].isOffscreen()) {
       this.blocks[i].removeFromWorld();
       this.blocks[i].remove();
       this.blocks.splice(i, 1);
     }
-  }
+  }*/
 };
 
