@@ -24,8 +24,6 @@ Container.prototype.addChild = function (child) {
   this.childrens[index]._index = index; // Wow such swag line. o/
   this.childrens[index]._parent = this; // Here we pass an instance of this to the children. Dad's here.
 
-  this.afterAddChild(child);
-
   return index;
 };
 
