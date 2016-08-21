@@ -62,7 +62,7 @@ SceneMain.prototype.init = function () {
   });
 
   // Now we add a player sprite, that'll be able to move and jump!
-  this.player = new Game.Sprite(400, 100, 50, 30, {
+  this.player = new Game.Sprite(400, 100, 60, 37, {
     name: 'player', // We define a name, for later in collision.
     physics: true,
     shape: Game.Shape.RECTANGLE,
