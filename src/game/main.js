@@ -137,6 +137,7 @@ SceneMain.prototype.collide = function (dir, shape1, shape2) {
 
     if (shape1.name == 'player') {
       this.jumping = false;
+      shape1.rotation = 0;
     }
   }
   return true;
