@@ -47,6 +47,7 @@ SceneMain.prototype.init = function () {
     physics: true,
     static: true,
     borderColor: 'red',
+    bgColor: 'red',
     shape: Game.Shape.RECTANGLE,
     buttonMode: true,
     collisionGroup: 0
@@ -58,6 +59,8 @@ SceneMain.prototype.init = function () {
     physics: true,
     shape: Game.Shape.RECTANGLE,
     bgColor: 'skyblue',
+    borderColor: 'blue',
+    borderSize: 2,
     buttonMode: true,
     draggable: true,
     selected: false,
@@ -72,8 +75,8 @@ SceneMain.prototype.init = function () {
     },
     onMouseOut: function () {
       // WARN: Here, `this` refer to the player instance.
-      this.borderSize = 0;
-      this.borderColor = null;
+      this.borderSize = 2;
+      this.borderColor = 'blue';
       this.bgColor = 'skyblue';
       this.alpha = 1;
     }
