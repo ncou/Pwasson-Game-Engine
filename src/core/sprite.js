@@ -167,7 +167,7 @@ Sprite.prototype.update = function (delta) {
 };
 
 /**
-* @public {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
+* @private {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
 **/
 Sprite.prototype._mouseDown = function (button, position) {
   if (this.draggable) {
@@ -181,7 +181,7 @@ Sprite.prototype._mouseDown = function (button, position) {
 };
 
 /**
-* @public {void} _mouseRelease - The proxy function for mouse release. Takes the same args as onMouseRelease.
+* @private {void} _mouseRelease - The proxy function for mouse release. Takes the same args as onMouseRelease.
 **/
 Sprite.prototype._mouseRelease = function (button, position) {
   if (this.draggable) {
@@ -195,14 +195,14 @@ Sprite.prototype._mouseRelease = function (button, position) {
 };
 
 /**
-* @public {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
+* @private {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
 **/
 Sprite.prototype._mouseHover = function (position) {
   this.onMouseHover(position);
 };
 
 /**
-* @public {void} _mouseMove - The proxy function for mouse move. Takes the same args as onMouseMove.
+* @private {void} _mouseMove - The proxy function for mouse move. Takes the same args as onMouseMove.
 **/
 Sprite.prototype._mouseMove = function (position) {
   if (this.draggable && this.selected) {
@@ -213,10 +213,9 @@ Sprite.prototype._mouseMove = function (position) {
 };
 
 /**
-* @public {void} _mouseOut- The proxy function for mouse out. Takes the same args as onMouseOut.
+* @private {void} _mouseOut- The proxy function for mouse out. Takes the same args as onMouseOut.
 **/
 Sprite.prototype._mouseOut = function () {
-
   this.onMouseOut();
 };
 
