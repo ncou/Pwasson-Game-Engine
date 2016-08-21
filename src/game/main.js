@@ -80,7 +80,7 @@ SceneMain.prototype.init = function () {
       this.borderSize = 2;
       this.borderColor = 'black';
       this.bgColor = 'yellow';
-      this.alpha = 1;
+      this.alpha = .6;
     },
     onMouseOut: function () {
       // WARN: Here, `this` refer to the player instance.

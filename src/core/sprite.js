@@ -149,8 +149,6 @@ Sprite.prototype.draw = function (delta) {
         }
       }
     Game.context.closePath();
-
-
   Game.context.restore();
 };
 
