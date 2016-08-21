@@ -69,7 +69,8 @@ function Sprite (x, y, width, height, texture, properties) {
   this.base = {
     position: new Game.Vector(x, y),
     rotation: this.rotation,
-    size: new Game.Vector(width, height)
+    size: new Game.Vector(width, height),
+    velocity: new Game.Vector(0, 0)
   };
   
   Game.merge(this, properties);
@@ -263,6 +264,7 @@ Sprite.prototype.reset = function () {
   this.position.copy(this.base.position);
   this.size.copy(this.base.size);
   this.rotation = this.base.rotation;
+  this.velocity.copy(this.base.velocity);
   this.needsUpdate = true;
 };
 

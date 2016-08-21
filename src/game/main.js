@@ -165,9 +165,10 @@ SceneMain.prototype.update = function (delta) {
   this.keyboard(delta);
   
   if (this.player.isOffscreen()) {
-    this.player.velocity = new Game.Vector(0, 0);
+    this.player.reset();
+    /*this.player.velocity = new Game.Vector(0, 0);
     this.player.rotation = 0;
-    this.player.position.copy(this.player.base.position);
+    this.player.position.copy(this.player.base.position);*/
   }
   
   /**
