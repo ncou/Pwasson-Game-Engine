@@ -62,7 +62,7 @@ SceneMain.prototype.init = function () {
     draggable: true,
     selected: false,
     collisionGroup: 1,
-    collideAgainst: [ 0, 1 ],
+    collideAgainst: [ 0, 1, 3 ],
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
       this.borderSize = 2;
@@ -90,28 +90,31 @@ SceneMain.prototype.init = function () {
 * @public populate - Add some childs to the scene, for demo only.
 * @param {int} count - The number of childs to add.
 **/
-SceneMain.prototype.populate = function (count) {
+SceneMain.prototype.populate = function (count, even) {
   for (var i = 0; i < count; i++) {
     var x = 100 + Math.floor(Math.random() * 600);
     var y = 50  + Math.floor(Math.random() * 400);
-    var width = Math.floor(Math.random() * 100);
-    var height = Math.floor(Math.random() * 100);
+    var width = Game.random(100, 25);
+    var height = Game.random(100, 25);
+    var color = (Math.random() > 0.5) ? 'lime' : 'blue';
+    var group = (color == 'lime') ? 2 : 3;
+    var against = (color == 'lime') ? [ 0, 2 ] : [ 0, 1, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, null, {
       type: 'block',
       physics: true,
       shape: shape,
-      borderColor: 'lime',
+      borderColor: color,
       buttonMode: true,
       draggable: true,
-      collisionGroup: 2,
-      collideAgainst: [ 0, 2 ],
+      collisionGroup: group,
+      collideAgainst: against,
       onMouseDown: function () { // Yes, we can use events here :p
         this.borderColor = 'yellow';
       },
       onMouseRelease: function () {
-        this.borderColor = 'lime';
+        this.borderColor = color;
       }
     }));
 

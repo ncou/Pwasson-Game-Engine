@@ -203,6 +203,18 @@ Game.merge = function (to, from) {
   return to;
 };
 
+/**
+* @public {int} random - Randomize a number.
+* @param {int} max - The maximum generated number.
+* @param {int} min - The minimum generated number.
+**/
+Game.random = function (max, min) {
+  var vMax = max || 100000,
+      vMin = min || 0;
+
+  return Math.floor(Math.random() * (vMax - vMin + 1) + vMin);
+};
+
 // Export the current Engine as Game.Engine.
 Game.Engine = new Engine();
 
