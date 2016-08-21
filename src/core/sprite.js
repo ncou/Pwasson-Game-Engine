@@ -15,6 +15,8 @@
 * @property {int} borderSize - The sprite border size. If 0, no border will be drawn.
 * @property {bool} buttonMode - If true, once the sprite got hovered, cursor changes to pointer.
 * @property {bool} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
+* @property {int} collisionGroup - The sprite collision group, used in physics with collideAgainst.
+* @property {Array<int>} collideAgainst - The collision groups that the sprite can collide against.
 * @property {bool} draggable - If true, the sprite can be dragged by the mouse.
 * @property {string|Color} fontColor - Used if the sprite contains some text.
 * @property {int} friction - The sprite friction, used in physics.
@@ -43,6 +45,8 @@ function Sprite (x, y, width, height, texture, properties) {
   this.borderSize = 2;
   this.buttonMode = false;
   this.canGoOffscreen = false;
+  this.collisionGroup = 0;
+  this.collideAgainst = [ 0 ];
   this.draggable = false;
   this.fontColor = '#fff';
   this.friction = 0.2;

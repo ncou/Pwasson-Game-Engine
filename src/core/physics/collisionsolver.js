@@ -13,7 +13,12 @@ function CollisionSolver () {
 CollisionSolver.prototype.solve = function (shape1, shape2) {
   var type1 = shape1.shape,
       type2 = shape2.shape;
-      
+
+  if (shape1.collideAgainst.includes(shape2.collisionGroup) == false) {
+    shape1.last.collisionShape = null;
+    return false;
+  }
+
   if (shape1.last.collisionShape == shape2) {
     shape1.velocity.y = 0;
     shape1.velocity.x = 0;

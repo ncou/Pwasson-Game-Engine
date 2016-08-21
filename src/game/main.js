@@ -49,6 +49,7 @@ SceneMain.prototype.init = function () {
     borderColor: 'red',
     shape: Game.Shape.RECTANGLE,
     buttonMode: true,
+    collisionGroup: 0
   });
 
   // Now we add a player sprite, that'll be able to move and jump!
@@ -56,27 +57,27 @@ SceneMain.prototype.init = function () {
     name: 'player', // We define a name, for later in collision.
     physics: true,
     shape: Game.Shape.RECTANGLE,
-    bgColor: 'lime',
+    bgColor: 'skyblue',
     buttonMode: true,
     draggable: true,
-    selected: false
+    selected: false,
+    collisionGroup: 1,
+    collideAgainst: [ 0, 1 ],
+    onMouseHover: function (pos) {
+      // WARN: Here, `this` refer to the player instance.
+      this.borderSize = 2;
+      this.borderColor = 'black';
+      this.bgColor = 'yellow';
+      this.alpha = 1;
+    },
+    onMouseOut: function () {
+      // WARN: Here, `this` refer to the player instance.
+      this.borderSize = 0;
+      this.borderColor = null;
+      this.bgColor = 'skyblue';
+      this.alpha = 1;
+    }
   });
-  
-  this.player.onMouseHover = function (pos) {
-    // WARN: Here, `this` refer to the player instance.
-    this.borderSize = 2;
-    this.borderColor = 'black';
-    this.bgColor = 'yellow';
-    this.alpha = 1;
-  };
-  
-  this.player.onMouseOut = function () {
-    // WARN: Here, `this` refer to the player instance.
-    this.borderSize = 0;
-    this.borderColor = null;
-    this.bgColor = 'lime';
-    this.alpha = 1;
-  };
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);
@@ -104,6 +105,8 @@ SceneMain.prototype.populate = function (count) {
       borderColor: 'lime',
       buttonMode: true,
       draggable: true,
+      collisionGroup: 2,
+      collideAgainst: [ 0, 2 ],
       onMouseDown: function () { // Yes, we can use events here :p
         this.borderColor = 'yellow';
       },
