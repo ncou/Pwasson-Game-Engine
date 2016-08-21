@@ -22,7 +22,7 @@ SceneMain.prototype.constructor = SceneMain;
 SceneMain.prototype.init = function () {
   this.jumping = false;
   this.blocks = [];
-  this.maxBlocks = 50;
+  this.maxBlocks = 25;
 
   // On keydown, set the key to true (pressed).
   document.addEventListener('keydown', function (e) {
@@ -101,7 +101,7 @@ SceneMain.prototype.populate = function (count, even) {
     var height = Game.random(100, 25);
     var color = (Math.random() > 0.5) ? 'lime' : 'blue';
     var group = (color == 'lime') ? 2 : 3;
-    var against = (color == 'lime') ? [ 0, 2 ] : [ 0, 1, 3 ];
+    var against = (color == 'lime') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, null, {
