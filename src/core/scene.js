@@ -121,6 +121,12 @@ Scene.prototype._loop = function () {
     **/
     for (var i = 0; i < this.childrens.length; i++) {
       var child = this.childrens[i];
+      if (child.isMouseHover()) {
+        Game.setCursor('pointer');
+      } else {
+        Game.setCursor('default');
+      }
+      
       if (child.needsUpdate === true) {
         child.update(this.delta);
         this.childrens[i].last.position.copy(child.position);

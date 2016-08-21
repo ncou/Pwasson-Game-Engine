@@ -149,14 +149,8 @@ Sprite.prototype.update = function (delta) {
   if (this.lock) return;
   
   if (this.isMouseHover()) {
-    if (this.buttonMode) {
-      Game.setCursor('pointer');
-    }
     this.onMouseHover(Game.Engine.mouse);
   } else {
-    if (this.buttonMode) {
-      Game.setCursor('default');
-    }
     this.onMouseOut();
   }
 

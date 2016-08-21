@@ -92,8 +92,8 @@ SceneMain.prototype.init = function () {
 **/
 SceneMain.prototype.populate = function (count, even) {
   for (var i = 0; i < count; i++) {
-    var x = 100 + Math.floor(Math.random() * 600);
-    var y = 50  + Math.floor(Math.random() * 400);
+    var x = 150 + Game.random(450);
+    var y = 50 + Game.random(400);
     var width = Game.random(100, 25);
     var height = Game.random(100, 25);
     var color = (Math.random() > 0.5) ? 'lime' : 'blue';
@@ -105,16 +105,25 @@ SceneMain.prototype.populate = function (count, even) {
       type: 'block',
       physics: true,
       shape: shape,
+      color: color,
       borderColor: color,
       buttonMode: true,
       draggable: true,
       collisionGroup: group,
       collideAgainst: against,
       onMouseDown: function () { // Yes, we can use events here :p
-        this.borderColor = 'yellow';
+        this.borderColor = 'red';
       },
       onMouseRelease: function () {
-        this.borderColor = color;
+        this.borderColor = this.color;
+      },
+      onMouseHover: function () {
+        this.alpha = .5;
+        this.bgColor = this.color;
+      },
+      onMouseOut: function () {
+        this.alpha = 1;
+        this.bgColor = null;
       }
     }));
 
