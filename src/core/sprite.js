@@ -63,7 +63,8 @@ function Sprite (x, y, width, height, texture, properties) {
   this.last = {
     position: this.position,
     rotation: this.rotation,
-    size: this.size
+    size: this.size,
+    collisionShape: null
   };
   this.base = {
     position: new Game.Vector(x, y),

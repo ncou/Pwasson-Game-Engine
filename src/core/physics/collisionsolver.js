@@ -13,6 +13,12 @@ function CollisionSolver () {
 CollisionSolver.prototype.solve = function (shape1, shape2) {
   var type1 = shape1.shape,
       type2 = shape2.shape;
+      
+  if (shape1.last.collisionShape == shape2) {
+    shape1.velocity.y = 0;
+    shape1.velocity.x = 0;
+    return true;
+  }
 
   if (type1 == Game.Shape.RECTANGLE && type2 == type1) {
     return this.RectangleRectangle(shape1, shape2);
@@ -80,9 +86,11 @@ CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
       }
     }
     
+    shape1.last.collisionShape = shape2;
     return true;
   }
-
+  
+  shape1.last.collisionShape = null;
   return false;
 };
 
@@ -103,9 +111,11 @@ CollisionSolver.prototype.CircleCircle = function (shape1, shape2) {
   if (vX + vY <= rSum) {
     //shape1.position.x = vX + shape2.position.x;
     //shape1.position.y = vY + shape2.position.y;
+    shape1.last.collisionShape = shape2;
     return Game.Engine.scene.collide(collisionDirection, shape1, shape2);
   }
 
+  shape1.last.collisionShape = null;
   return false;
 };
 
