@@ -160,7 +160,7 @@ Scene.prototype.onMouseDown = function (button, position) {
   **/
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i].isMouseHover()) {
-      this.childrens[i].onMouseDown(button, position);
+      this.childrens[i]._mouseDown(button, position);
       return;
     }
   }
@@ -179,7 +179,7 @@ Scene.prototype.onMouseRelease = function (button, position) {
   **/
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i].isMouseHover()) {
-      this.childrens[i].onMouseRelease(button, position);
+      this.childrens[i]._mouseRelease(button, position);
       return;
     }
   }
@@ -190,13 +190,34 @@ Scene.prototype.onMouseRelease = function (button, position) {
 * @event This function only gets called from the engine, you shouldn't trigger it manually.
 * @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
 **/
-Scene.prototype.onMouseHover = function (position) {};
+Scene.prototype.onMouseHover = function (position) {
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i].isMouseHover()) {
+      this.childrens[i]._mouseHover(position);
+    } else {
+      this.childrens[i]._mouseMove(position);
+    }
+  }
+};
 
 /**
 * @public {void} onMouseOut - Function that gets called when the mouse goes off the canvas.
 * @event This function only gets called from the engine, you shouldn't trigger it manually.
 **/
-Scene.prototype.onMouseOut = function (button, position) {};
+Scene.prototype.onMouseOut = function (button, position) {
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i].isMouseHover() === false) {
+      this.childrens[i]._mouseOut(button, position);
+    } else { // If mouse goes offscreen
+      if (this.childrens[i].selected) {
+        this.childrens[i].selected = false; // Help us to avoid drag&drop being crazy when mouse is off canvas.
+        if (this.childrens[i].physics && this.static) {
+          this.childrens[i].static = false;
+        }
+      }
+    }
+  }
+};
 
 /**
 * @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.

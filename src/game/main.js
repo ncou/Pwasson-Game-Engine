@@ -58,6 +58,7 @@ SceneMain.prototype.init = function () {
     shape: Game.Shape.RECTANGLE,
     bgColor: 'lime',
     buttonMode: true,
+    draggable: true,
     selected: false
   });
   
@@ -76,37 +77,13 @@ SceneMain.prototype.init = function () {
     this.bgColor = 'lime';
     this.alpha = 1;
   };
-  
-  this.player.onMouseDown = function (button, position) {
-    // WARN: Here, `this` refer to the player instance.
-    // First we check if the click is valid, even if this should never happens. Doesn't cost many things.
-    if (this.isMouseHover() === false) {
-      return;
-    }
-    
-    if (this.selected == false) {
-      this.borderSize = 2;
-      this.borderColor = 'black';
-      this.bgColor = 'red';
-      this.alpha = 1;
-      this.selected = true;
-    } else {
-      this.borderSize = 0;
-      this.borderColor = null;
-      this.bgColor = 'lime';
-      this.alpha = 1;
-      this.selected = false;
-    }
-    
-    console.log('Player clicked.');
-  };
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);
   this.addChild(this.player);
   this.world.addChild(this.ground);
   this.world.addChild(this.player);
-};
+}
 
 /**
 * @public populate - Add some childs to the scene, for demo only.
@@ -124,7 +101,15 @@ SceneMain.prototype.populate = function (count) {
       type: 'block',
       physics: true,
       shape: shape,
-      borderColor: 'lime'
+      borderColor: 'lime',
+      buttonMode: true,
+      draggable: true,
+      onMouseDown: function () { // Yes, we can use events here :p
+        this.borderColor = 'yellow';
+      },
+      onMouseRelease: function () {
+        this.borderColor = 'lime';
+      }
     }));
 
     this.addChild(this.blocks[i]);

@@ -15,6 +15,7 @@
 * @property {int} borderSize - The sprite border size. If 0, no border will be drawn.
 * @property {bool} buttonMode - If true, once the sprite got hovered, cursor changes to pointer.
 * @property {bool} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
+* @property {bool} draggable - If true, the sprite can be dragged by the mouse.
 * @property {string|Color} fontColor - Used if the sprite contains some text.
 * @property {int} friction - The sprite friction, used in physics.
 * @property {Object} layers - The different layers used to animate the sprite.
@@ -42,6 +43,7 @@ function Sprite (x, y, width, height, texture, properties) {
   this.borderSize = 2;
   this.buttonMode = false;
   this.canGoOffscreen = false;
+  this.draggable = false;
   this.fontColor = '#fff';
   this.friction = 0.2;
   this.gravityAffected = true;
@@ -165,6 +167,60 @@ Sprite.prototype.update = function (delta) {
 };
 
 /**
+* @public {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
+**/
+Sprite.prototype._mouseDown = function (button, position) {
+  if (this.draggable) {
+    this.selected = true;
+    
+    if (this.physics && !this.static) {
+      this.static = true; // We make the sprite static to avoid glitches related to physics.
+    }
+  }
+  this.onMouseDown(button, position);
+};
+
+/**
+* @public {void} _mouseRelease - The proxy function for mouse release. Takes the same args as onMouseRelease.
+**/
+Sprite.prototype._mouseRelease = function (button, position) {
+  if (this.draggable) {
+    this.selected = false;
+    
+    if (this.physics && this.static) {
+      this.static = false;
+    }
+  }
+  this.onMouseRelease(button, position);
+};
+
+/**
+* @public {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
+**/
+Sprite.prototype._mouseHover = function (position) {
+  this.onMouseHover(position);
+};
+
+/**
+* @public {void} _mouseMove - The proxy function for mouse move. Takes the same args as onMouseMove.
+**/
+Sprite.prototype._mouseMove = function (position) {
+  if (this.draggable && this.selected) {
+    this.position.x = position.x - (this.size.x / 2);
+    this.position.y = position.y - (this.size.y / 2);
+  }
+  this.onMouseMove(position);
+};
+
+/**
+* @public {void} _mouseOut- The proxy function for mouse out. Takes the same args as onMouseOut.
+**/
+Sprite.prototype._mouseOut = function () {
+
+  this.onMouseOut();
+};
+
+/**
 * @public {void} onMouseDown - Function that gets called when the sprite got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
 * @param {int} button - The click button id. (1: left, 2: right, 4: middle)
@@ -186,6 +242,13 @@ Sprite.prototype.onMouseRelease = function (button, position) {};
 * @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
 **/
 Sprite.prototype.onMouseHover = function (position) {};
+
+/**
+* @public {void} onMouseMove - Function that gets called when the mouse cursor got moved.
+* @event This function only gets called from the engine, you shouldn't trigger it manually.
+* @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
+**/
+Sprite.prototype.onMouseMove = function (position) {};
 
 /**
 * @public {void} onMouseOut - Function that gets called when the mouse goes off the sprite.
