@@ -26,6 +26,7 @@
 * @property {Vector} position - The sprite position.
 * @property {int} restitution - The sprite restitution, used in physics.
 * @property {int} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
+* @property {Vector} scale - The sprite scale factors.
 * @property {Shape} shape - The sprite shape. Used for drawing, also used for physics as the hitbox.
 * @property {Vector} size - The sprite size. size.x = width, size.y = height.
 * @property {int} speed - The sprite animation speed.
@@ -35,7 +36,7 @@
 * @property {Object} last - The sprite last position, rotation and size.
 * @property {Object} base - The sprite base position, rotation and size. MUST never be updated. (readOnly)
 **/
-function Sprite (x, y, width, height, texture, properties) {
+function Sprite (x, y, width, height, properties) {
   this._className = 'Sprite';
 
   this.alpha = 1;
@@ -57,12 +58,13 @@ function Sprite (x, y, width, height, texture, properties) {
   this.position = new Game.Vector(x, y);
   this.restitution = 0.3;
   this.rotation = 0;
+  this.scale = new Game.Vector(1, 1);
   this.size = new Game.Vector(width, height);
   this.shape = Game.Shape.RECTANGLE;
   this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
   this.speed = 20;
   this.static = false;
-  this.texture = Game.Engine.getTexture(texture);
+  this.texture = null;
   this.velocity = new Game.Vector(0, 0);
   this.last = {
     position: this.position,
@@ -103,6 +105,8 @@ Sprite.prototype.draw = function (delta) {
         (this.position.x + (this.size.x * this.anchor.x)),
         (this.position.y + (this.size.y * this.anchor.y))
       );
+      
+      Game.context.scale(this.scale.x, this.scale.y);
       Game.context.rotate(((this.rotation) % 360) * Math.PI / 180);
 
       // Let's reset the transformations. Uglyness but...
@@ -126,14 +130,23 @@ Sprite.prototype.draw = function (delta) {
           break;
       }
 
-      if (this.bgColor !== null) {
-        Game.context.fillStyle = this.bgColor;
-        Game.context.fill();
-      }
-      if (this.borderSize > 0 && this.borderColor !== null) {
-        Game.context.strokeStyle = this.borderColor;
-        Game.context.lineWidth = this.borderSize;
-        Game.context.stroke();
+      if (this.texture !== null) {
+        Game.context.clip();
+        Game.context.drawImage(
+          Game.Engine.loader.getTexture(this.texture),
+          this.position.x, this.position.y,
+          this.size.x, this.size.y
+        );
+      } else {
+        if (this.bgColor !== null) {
+          Game.context.fillStyle = this.bgColor;
+          Game.context.fill();
+        }
+        if (this.borderSize > 0 && this.borderColor !== null) {
+          Game.context.strokeStyle = this.borderColor;
+          Game.context.lineWidth = this.borderSize;
+          Game.context.stroke();
+        }
       }
     Game.context.closePath();
 

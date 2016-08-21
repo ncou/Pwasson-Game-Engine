@@ -9,12 +9,20 @@ function SceneMain (name) {
 
   this.keys = [];
 
+  this.loadAssets();
   this.init();
 }
 
 // Javascript shit to extend another "class"...
 SceneMain.prototype = Object.create(Game.Scene.prototype);
 SceneMain.prototype.constructor = SceneMain;
+
+/**
+* @public {void} loadAssets - Load the scene assets.
+**/
+SceneMain.prototype.loadAssets = function () {
+  Game.Engine.loader.addImage('pwasson', 'assets/pwasson.png');
+};
 
 /**
 * @public {void} init - Initialize the scene.
@@ -43,7 +51,7 @@ SceneMain.prototype.init = function () {
   this.populate(this.maxBlocks);
 
   // Let's draw a ground, we don't want blocks to fall forever.
-  this.ground = new Game.Sprite(100, 500, 600, 30, null, {
+  this.ground = new Game.Sprite(100, 500, 600, 30, {
     physics: true,
     static: true,
     borderColor: 'red',
@@ -54,7 +62,7 @@ SceneMain.prototype.init = function () {
   });
 
   // Now we add a player sprite, that'll be able to move and jump!
-  this.player = new Game.Sprite(400, 100, 30, 30, null, {
+  this.player = new Game.Sprite(400, 100, 50, 30, {
     name: 'player', // We define a name, for later in collision.
     physics: true,
     shape: Game.Shape.RECTANGLE,
@@ -66,6 +74,7 @@ SceneMain.prototype.init = function () {
     selected: false,
     collisionGroup: 1,
     collideAgainst: [ 0, 1, 3 ],
+    texture: 'pwasson',
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
       this.borderSize = 2;
@@ -104,7 +113,7 @@ SceneMain.prototype.populate = function (count, even) {
     var against = (color == 'lime') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
-    this.blocks.push(new Game.Sprite(x, y, width, height, null, {
+    this.blocks.push(new Game.Sprite(x, y, width, height, {
       type: 'block',
       physics: true,
       shape: shape,
@@ -160,19 +169,26 @@ SceneMain.prototype.collide = function (dir, shape1, shape2) {
 * @param {double} delta - The scene delta time.
 **/
 SceneMain.prototype.keyboard = function (delta) {
+  // Jump: W, Z, UP, SPACE.
   if (this.keys[38] || this.keys[32] || this.keys[87] || this.keys[90]) {
     if (this.jumping == false) {
       this.jumping = true;
       this.player.velocity.y -= 10;
     }
   }
+
+  // Right: D, RIGHT.
   if (this.keys[39] || this.keys[68]) {
     this.player.velocity.x += 10;
+    this.player.scale.x = 1;
     this.player.rotation += 200 / delta;
   }
+
+  // Left: A, Q, LEFT.
   if (this.keys[37] || this.keys[65] || this.keys[81]) {
     this.player.velocity.x -= 10;
-    this.player.rotation -= 200 / delta;
+    this.player.scale.x = -1;
+    this.player.rotation += 200 / delta;
   }
 };
 

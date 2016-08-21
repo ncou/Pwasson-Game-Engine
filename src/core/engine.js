@@ -26,6 +26,7 @@ function Engine () {
   this._engineScripts = [
     'game/config.js',
     'core/vector.js',
+    'core/assetsloader.js',
     'core/container.js',
     'core/shape.js',
     'core/sprite.js',
@@ -65,9 +66,10 @@ Engine.prototype._init = function () {
     this.canvas.localName + '#' + this.canvas.id;
 
   console.log('~ Pwasson Engine started (' + canvasDescriptor + ') ~');
-  this._initEvents();
-
+  this.loader = new Game.AssetsLoader();
+  
   this.setScene(new SceneMain('Main'));
+  this._initEvents();
 };
 
 /**
@@ -118,6 +120,8 @@ Engine.prototype.getMousePos = function (event) {
 * @private {void} _initEvents - Initialize the canvas events and dispatch them.
 **/
 Engine.prototype._initEvents = function () {
+  if (this.scene === null || this.scene === undefined) throw 'Scene is not defined. Set the scene using Game.Engine.setScene()';
+
   this.canvas.addEventListener('mousedown', function (e) {
     this.scene.onMouseDown(e.buttons, this.getMousePos(e));
   }.bind(this), false);
