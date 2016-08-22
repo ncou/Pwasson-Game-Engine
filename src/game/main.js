@@ -63,7 +63,8 @@ SceneMain.prototype.init = function () {
     bgColor: 'rgba(73, 169, 66, 0.5)',
     shape: Game.Shape.RECTANGLE,
     buttonMode: true,
-    collisionGroup: 0
+    collisionGroup: 0,
+    shadowColor: 'rgba(73, 169, 66, 1)',
   });
 
   // Now we add a player sprite, that'll be able to move and jump!

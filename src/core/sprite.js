@@ -28,6 +28,9 @@
 * @property {int} restitution - The sprite restitution, used in physics.
 * @property {int} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
 * @property {Vector} scale - The sprite scale factors.
+* @property {int} shadowBlur - The sprite shadow blur factor.
+* @property {String|Color} shadowColor - The sprite shadow color. If null, no shadow will be displayed.
+* @property {Vector} shadowOffset - The sprite shadow offsets.
 * @property {Shape} shape - The sprite shape. Used for drawing, also used for physics as the hitbox.
 * @property {Vector} size - The sprite size. size.x = width, size.y = height.
 * @property {int} speed - The sprite animation speed.
@@ -61,6 +64,9 @@ function Sprite (x, y, width, height, properties) {
   this.restitution = 0.3;
   this.rotation = 0;
   this.scale = new Game.Vector(1, 1);
+  this.shadowBlur = 5;
+  this.shadowColor = null;
+  this.shadowOffset = new Game.Vector(0, 0);
   this.size = new Game.Vector(width, height);
   this.shape = Game.Shape.RECTANGLE;
   this.hitbox = new Game.HitBox(this.shape, this.position, new Game.Vector(0, 0));
@@ -130,6 +136,13 @@ Sprite.prototype.draw = function (delta) {
         default:
           console.log('Unknown shape. Please refer to Game.Shape for a list of available shapes.');
           break;
+      }
+
+      if (this.shadowColor !== null) {
+        Game.context.shadowBlur = this.shadowBlur;
+        Game.context.shadowColor = this.shadowColor;
+        Game.context.shadowOffsetX = this.shadowOffset.x;
+        Game.context.shadowOffsetY = this.shadowOffset.y;
       }
 
       if (this.texture != null && Game.Engine.loader.getTexture(this.texture) != false) {
