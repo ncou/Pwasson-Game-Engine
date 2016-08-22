@@ -15,6 +15,7 @@ function AssetsLoader () {
 AssetsLoader.prototype.addImage = function (key, path) {
   this.images[key] = new Image();
   this.images[key].path = path;
+  this.images[key].type = path.substr(path.lastIndexOf('.')+1); // Get the file extension.
   this.images[key].loaded = false;
   this.images[key].onload = function () { this.loaded = true; };
   this.images[key].src = path;

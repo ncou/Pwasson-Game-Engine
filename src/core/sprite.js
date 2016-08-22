@@ -132,13 +132,24 @@ Sprite.prototype.draw = function (delta) {
           break;
       }
 
-      if (this.texture !== null) {
+      if (this.texture != null && Game.Engine.loader.getTexture(this.texture) != false) {
         Game.context.clip();
-        Game.context.drawImage(
-          Game.Engine.loader.getTexture(this.texture),
-          this.position.x, this.position.y,
-          this.size.x, this.size.y
-        );
+        var image = Game.Engine.loader.getTexture(this.texture);
+        if (image.type == 'svg') { // SVG files needs a width/height to be properly drawn. :x
+          image.width = this.size.x;
+          image.height = this.size.y;
+          Game.context.drawImage(
+            image,
+            this.position.x, this.position.y,
+            this.size.x, this.size.y
+          );
+        } else {
+          Game.context.drawImage(
+            image,
+            this.position.x, this.position.y,
+            this.size.x, this.size.y
+          );
+        }
       } else {
         if (this.bgColor !== null) {
           Game.context.fillStyle = this.bgColor;

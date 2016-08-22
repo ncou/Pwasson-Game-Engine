@@ -21,7 +21,11 @@ SceneMain.prototype.constructor = SceneMain;
 * @public {void} loadAssets - Load the scene assets.
 **/
 SceneMain.prototype.loadAssets = function () {
-  Game.Engine.loader.addImage('pwasson', 'assets/pwasson.png');
+  Game.Engine.loader.addImage('player', 'assets/sprites/player.png');
+  Game.Engine.loader.addImage('pwasson', 'assets/sprites/pwasson.png');
+  Game.Engine.loader.addImage('mice', 'assets/sprites/mice.png');
+  Game.Engine.loader.addImage('box', 'assets/sprites/box.png');
+  Game.Engine.loader.addImage('tiger', 'assets/scalables/tiger.svg');
 };
 
 /**
@@ -52,7 +56,7 @@ SceneMain.prototype.init = function () {
   this.populate(this.maxBlocks);
 
   // Let's draw a ground, we don't want blocks to fall forever.
-  this.ground = new Game.Sprite(100, 500, 600, 30, {
+  this.ground = new Game.Sprite(100, 520, 600, 40, {
     physics: true,
     static: true,
     borderColor: '#237f52',
@@ -78,17 +82,21 @@ SceneMain.prototype.init = function () {
     selected: false,
     collisionGroup: 1,
     collideAgainst: [ 0, 1, 3 ],
-    //texture: 'pwasson',
+    texture: 'player',
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
       this.bgColor = 'rgba(255, 219, 0, 0.8)';
-      //this.alpha = .6;
+      if (this.texture !== null) {
+        this.alpha = .6;
+      }
     },
     onMouseOut: function () {
       // WARN: Here, `this` refer to the player instance.
       this.borderColor = this.border;
       this.bgColor = this.bg;
-      //this.alpha = 1;
+      if (this.texture !== null) {
+        this.alpha = 1;
+      }
     },
     onMouseClick: function (button, position) {
       if (this.setAllStatic) {
