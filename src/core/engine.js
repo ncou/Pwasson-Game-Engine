@@ -122,19 +122,23 @@ Engine.prototype.getMousePos = function (event) {
 Engine.prototype._initEvents = function () {
   if (this.scene === null || this.scene === undefined) throw 'Scene is not defined. Set the scene using Game.Engine.setScene()';
 
+  this.canvas.addEventListener('mouseclick', function (e) {
+    this.scene.onMouseClick(e.buttons, this.getMousePos(e));
+  }.bind(this), false);
+
   this.canvas.addEventListener('mousedown', function (e) {
     this.scene.onMouseDown(e.buttons, this.getMousePos(e));
   }.bind(this), false);
-  
+
   this.canvas.addEventListener('mouseup', function (e) {
     this.scene.onMouseRelease(e.buttons, this.getMousePos(e));
   }.bind(this), false);
-  
+
   this.canvas.addEventListener('mousemove', function (e) {
     this.mouse = this.getMousePos(e);
     this.scene.onMouseHover(this.mouse);
   }.bind(this), false);
-  
+
   this.canvas.addEventListener('mouseout', function (e) {
     this.mouse = this.getMousePos(e);
     this.scene.onMouseOut(e.buttons, this.mouse);

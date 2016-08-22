@@ -31,6 +31,7 @@ SceneMain.prototype.init = function () {
   this.jumping = false;
   this.blocks = [];
   this.maxBlocks = 25;
+  this.setAllStatic = false;
 
   // On keydown, set the key to true (pressed).
   document.addEventListener('keydown', function (e) {
@@ -88,7 +89,33 @@ SceneMain.prototype.init = function () {
       this.borderColor = this.border;
       this.bgColor = this.bg;
       //this.alpha = 1;
-    }
+    },
+    onMouseClick: function (button, position) {
+      if (this.setAllStatic) {
+        for (var i = 0; i < this.childrens.length; i++) {
+          //if (this.childrens[i] == this.player || this.childrens[i] == this.ground) continue;
+
+          this.childrens[i].static = true;
+          this.childrens[i].draggable = false;
+          this.childrens[i].buttonMode = false;
+        }
+        this.setAllStatic = false;
+      } else {
+        for (var i = 0; i < this.childrens.length; i++) {
+          //if (this.childrens[i] == this.player || this.childrens[i] == this.ground) continue;
+
+          this.childrens[i].static = false;
+          this.childrens[i].draggable = true;
+          this.childrens[i].buttonMode = true;
+        }
+        this.setAllStatic = true;
+      }
+      
+      this.player.static = false;
+      this.player.draggable = true;
+      this.player.buttonMode = true;
+      this.ground.static = true;
+    }.bind(this)
   });
   //this.player.setHitboxSize(2, 10);
 

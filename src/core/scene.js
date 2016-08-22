@@ -155,6 +155,25 @@ Scene.prototype.stop = function () {
 Scene.prototype.update = function (delta) {};
 
 /**
+* @public {void} onMouseClick - Function that gets called when the canvas got clicked.
+* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Scene.prototype.onMouseClick = function (button, position) {
+  /**
+  * Let simply loop over every childrens this scene has.
+  * If the mouse click has happened into a child, let's tell this sprite it got a click.
+  **/
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i].isMouseHover()) {
+      this.childrens[i]._mouseClick(button, position);
+      return;
+    }
+  }
+};
+
+/**
 * @public {void} onMouseDown - Function that gets called when the canvas got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
 * @param {int} button - The click button id. (1: left, 2: right, 4: middle)

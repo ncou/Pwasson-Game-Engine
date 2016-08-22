@@ -204,11 +204,27 @@ Sprite.prototype.setHitboxSize = function (size, y) {
 };
 
 /**
+* @private {void} _mouseClick - The proxy function for mouse click. Takes the same args as onMouseClick.
+**/
+Sprite.prototype._mouseClick = function (button, position) {
+  if (this.draggable) {
+    this.selected = true;
+    
+    if (this.physics && !this.static) {
+      this.static = true; // We make the sprite static to avoid glitches related to physics.
+    }
+  }
+  this.onMouseClick(button, position);
+};
+
+/**
 * @private {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
 **/
 Sprite.prototype._mouseDown = function (button, position) {
   if (this.draggable) {
     this.selected = true;
+    this.position.x = (position.x - this.anchor.x);
+    this.position.y = (position.y - this.anchor.y);
     
     if (this.physics && !this.static) {
       this.static = true; // We make the sprite static to avoid glitches related to physics.
@@ -243,8 +259,8 @@ Sprite.prototype._mouseHover = function (position) {
 **/
 Sprite.prototype._mouseMove = function (position) {
   if (this.draggable && this.selected) {
-    this.position.x = position.x - (this.size.x / 2);
-    this.position.y = position.y - (this.size.y / 2);
+    this.position.x = (position.x - this.anchor.x);
+    this.position.y = (position.y - this.anchor.y);
   }
   this.onMouseMove(position);
 };
@@ -255,6 +271,14 @@ Sprite.prototype._mouseMove = function (position) {
 Sprite.prototype._mouseOut = function () {
   this.onMouseOut();
 };
+
+/**
+* @public {void} onMouseClick - Function that gets called when the sprite got clicked.
+* @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
+* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
+**/
+Sprite.prototype.onMouseClick = function (button, position) {};
 
 /**
 * @public {void} onMouseDown - Function that gets called when the sprite got clicked.
