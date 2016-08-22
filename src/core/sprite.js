@@ -5,22 +5,23 @@
 * @param {int} y - Sprite's position in Y.
 * @param {int} width - Sprite's width.
 * @param {int} height - Sprite's height.
-* @param {string|Texture} texture - The sprite texture. If {string}, Engine.getTexture is called.
+* @param {String|Texture} texture - The sprite texture. If {string}, Engine.getTexture is called.
 * @param {Object} properties - The sprite properties. Refers to the @properties fields.
 *
 * @property {int} alpha - The sprite opacity. Must be between 0 and 1.
 * @property {Vector} anchor - Specify the anchor point of the sprite (for rotation).
-* @property {string|Color} bgColor - The sprite background color. If null, no background will be drawn.
-* @property {string|Color} borderColor - The sprite border color. If null, no border will be drawn.
+* @property {String|Color} bgColor - The sprite background color. If null, no background will be drawn.
+* @property {String|Color} borderColor - The sprite border color. If null, no border will be drawn.
 * @property {int} borderSize - The sprite border size. If 0, no border will be drawn.
 * @property {bool} buttonMode - If true, once the sprite got hovered, cursor changes to pointer.
 * @property {bool} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
 * @property {int} collisionGroup - The sprite collision group, used in physics with collideAgainst.
 * @property {Array<int>} collideAgainst - The collision groups that the sprite can collide against.
 * @property {bool} draggable - If true, the sprite can be dragged by the mouse.
-* @property {string|Color} fontColor - Used if the sprite contains some text.
+* @property {String|Color} fontColor - Used if the sprite contains some text.
 * @property {int} friction - The sprite friction, used in physics.
 * @property {Object} layers - The different layers used to animate the sprite.
+* @property {String} lineJoin - The sprite lineJoin, used in storkes/borders. (Allowed: miter, round, bevel)
 * @property {bool} needsUpdate - If true the sprite will be update, else it wont.
 * @property {bool} physics - If true the sprite will be given a hitbox and will be able to use the scene physic world.
 * @property {Vector} position - The sprite position.
@@ -53,6 +54,7 @@ function Sprite (x, y, width, height, properties) {
   this.friction = 0.2;
   this.gravityAffected = true;
   this.layers = {};
+  this.lineJoin = 'round';
   this.needsUpdate = true;
   this.physics = false;
   this.position = new Game.Vector(x, y);
@@ -145,6 +147,7 @@ Sprite.prototype.draw = function (delta) {
         if (this.borderSize > 0 && this.borderColor !== null) {
           Game.context.strokeStyle = this.borderColor;
           Game.context.lineWidth = this.borderSize;
+          Game.context.lineJoin = this.lineJoin;
           Game.context.stroke();
         }
       }

@@ -12,6 +12,6 @@ Game.Config = {
     wrapper: '#game-wrapper',
     width: 800,
     height: 600,
-    bgColor: '#71c6c1'
+    bgColor: '#eff2f3'
   }
 };

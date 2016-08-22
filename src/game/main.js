@@ -55,26 +55,29 @@ SceneMain.prototype.init = function () {
     physics: true,
     static: true,
     borderColor: '#237f52',
-    bgColor: '#49a942',
+    bgColor: 'rgba(73, 169, 66, 0.5)',
     shape: Game.Shape.RECTANGLE,
     buttonMode: true,
     collisionGroup: 0
   });
 
   // Now we add a player sprite, that'll be able to move and jump!
-  this.player = new Game.Sprite(400, 100, 60, 37, {
+  this.player = new Game.Sprite(400, 100, 40, 40, {
     name: 'player', // We define a name, for later in collision.
+    bg: 'rgba(255, 205, 0, 0.5)',
+    border: '#febd17',
+    
     physics: true,
     shape: Game.Shape.RECTANGLE,
-    bgColor: 'skyblue',
-    borderColor: 'blue',
+    bgColor: this.bg,
+    borderColor: this.border,
     borderSize: 2,
     buttonMode: true,
     draggable: true,
     selected: false,
     collisionGroup: 1,
     collideAgainst: [ 0, 1, 3 ],
-    texture: 'pwasson',
+    //texture: 'pwasson',
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
       this.borderSize = 2;
@@ -85,8 +88,8 @@ SceneMain.prototype.init = function () {
     onMouseOut: function () {
       // WARN: Here, `this` refer to the player instance.
       this.borderSize = 2;
-      this.borderColor = 'blue';
-      this.bgColor = 'skyblue';
+      this.borderColor = this.border;
+      this.bgColor = this.bg;
       this.alpha = 1;
     }
   });
@@ -109,10 +112,10 @@ SceneMain.prototype.populate = function (count, even) {
     var y = 50 + Game.random(400);
     var width = Game.random(100, 25);
     var height = Game.random(100, 25);
-    var color = (Math.random() > 0.5) ? '#689550' : '#0066b2';
-    var bg = (color == '#689550') ? '#8ba753' : '#00aeef';
-    var group = (color == '#689550') ? 2 : 3;
-    var against = (color == '#689550') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
+    var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
+    var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.5)' : 'rgba(0, 174, 239, 0.5)';
+    var group = (color == '#33cc99') ? 2 : 3;
+    var against = (color == '#33cc99') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, {
