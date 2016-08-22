@@ -80,17 +80,14 @@ SceneMain.prototype.init = function () {
     //texture: 'pwasson',
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
-      this.borderSize = 2;
-      this.borderColor = 'black';
-      this.bgColor = 'yellow';
-      this.alpha = .6;
+      this.bgColor = 'rgba(255, 219, 0, 0.8)';
+      //this.alpha = .6;
     },
     onMouseOut: function () {
       // WARN: Here, `this` refer to the player instance.
-      this.borderSize = 2;
       this.borderColor = this.border;
       this.bgColor = this.bg;
-      this.alpha = 1;
+      //this.alpha = 1;
     }
   });
   //this.player.setHitboxSize(2, 10);
@@ -113,7 +110,7 @@ SceneMain.prototype.populate = function (count, even) {
     var width = Game.random(100, 25);
     var height = Game.random(100, 25);
     var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
-    var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.5)' : 'rgba(0, 174, 239, 0.5)';
+    var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.6)' : 'rgba(0, 174, 239, 0.5)';
     var group = (color == '#33cc99') ? 2 : 3;
     var against = (color == '#33cc99') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
 
@@ -136,14 +133,13 @@ SceneMain.prototype.populate = function (count, even) {
           this.remove();
           return;
         }
-        this.borderColor = 'red';
       },
       onMouseRelease: function () {
         this.borderColor = this.color;
       },
       onMouseHover: function () {
-        this.alpha = .5;
-        this.bgColor = this.color;
+        //this.alpha = .5;
+        this.bgColor = 'rgba(13, 105, 175, 0.5)';
       },
       onMouseOut: function () {
         this.alpha = 1;
