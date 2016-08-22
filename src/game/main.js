@@ -216,7 +216,7 @@ SceneMain.prototype.keyboard = function (delta) {
   if (this.keys[38] || this.keys[32] || this.keys[87] || this.keys[90]) {
     if (this.jumping == false) {
       this.jumping = true;
-      this.player.velocity.y -= 10;
+      this.player.velocity.y -= 8;
     }
   }
 
