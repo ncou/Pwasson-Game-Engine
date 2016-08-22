@@ -147,7 +147,7 @@ SceneMain.prototype.populate = function (count, even) {
     var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
     var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.6)' : 'rgba(0, 174, 239, 0.5)';
     var group = (color == '#33cc99') ? 2 : 3;
-    var against = (color == '#33cc99') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
+    var against = (color == '#33cc99') ? [ 0, 2, 3 ] : [ 0, 1, 2, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, {
