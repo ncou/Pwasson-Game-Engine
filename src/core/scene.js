@@ -82,6 +82,7 @@ Scene.prototype.removeChild = function (index) {
   if (this.childrens[index] === undefined) throw 'Child at index ' + index + ' doesn\'t exists.';
 
   this.childrens.splice(index, 1);
+  //this.childrens[index] = null;
 
   if (this.childrens[index] === undefined) {
     return true;

@@ -54,8 +54,8 @@ SceneMain.prototype.init = function () {
   this.ground = new Game.Sprite(100, 500, 600, 30, {
     physics: true,
     static: true,
-    borderColor: 'red',
-    bgColor: 'red',
+    borderColor: '#237f52',
+    bgColor: '#49a942',
     shape: Game.Shape.RECTANGLE,
     buttonMode: true,
     collisionGroup: 0
@@ -108,22 +108,30 @@ SceneMain.prototype.populate = function (count, even) {
     var y = 50 + Game.random(400);
     var width = Game.random(100, 25);
     var height = Game.random(100, 25);
-    var color = (Math.random() > 0.5) ? 'lime' : 'blue';
-    var group = (color == 'lime') ? 2 : 3;
-    var against = (color == 'lime') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
+    var color = (Math.random() > 0.5) ? '#689550' : '#0066b2';
+    var bg = (color == '#689550') ? '#8ba753' : '#00aeef';
+    var group = (color == '#689550') ? 2 : 3;
+    var against = (color == '#689550') ? [ 0, 2 ] : [ 0, 1, 2, 3 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, {
       type: 'block',
       physics: true,
       shape: shape,
+      bg: bg,
       color: color,
+      bgColor: bg,
       borderColor: color,
       buttonMode: true,
       draggable: true,
       collisionGroup: group,
       collideAgainst: against,
-      onMouseDown: function () { // Yes, we can use events here :p
+      onMouseDown: function (button, position) { // Yes, we can use events here :p
+        if (button == 4) {
+          this.removeFromWorld();
+          this.remove();
+          return;
+        }
         this.borderColor = 'red';
       },
       onMouseRelease: function () {
@@ -135,7 +143,7 @@ SceneMain.prototype.populate = function (count, even) {
       },
       onMouseOut: function () {
         this.alpha = 1;
-        this.bgColor = null;
+        this.bgColor = this.bg;
       }
     }));
 
