@@ -90,6 +90,7 @@ SceneMain.prototype.init = function () {
       this.alpha = 1;
     }
   });
+  //this.player.setHitboxSize(2, 10);
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);

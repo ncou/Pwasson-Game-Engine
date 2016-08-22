@@ -61,7 +61,7 @@ function Sprite (x, y, width, height, properties) {
   this.scale = new Game.Vector(1, 1);
   this.size = new Game.Vector(width, height);
   this.shape = Game.Shape.RECTANGLE;
-  this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
+  this.hitbox = new Game.HitBox(this.shape, this.position, new Game.Vector(0, 0));
   this.speed = 20;
   this.static = false;
   this.texture = null;
@@ -174,7 +174,30 @@ Sprite.prototype.update = function (delta) {
   this.draw(delta);
   
   // Keep the hitbox position updated.
-  this.hitbox.position.copy(this.position);
+  //this.hitbox.position.copy(this.position);
+};
+
+/**
+* @public {void} setHitboxSize - Method to set the hitbox size.
+* @param {Vector} size - The hitbox's new size to set.
+* @param (optional) {int} y - The hitbox's new size in Y. If defined, permits to use `size` as a Number for X.
+**/
+Sprite.prototype.setHitboxSize = function (size, y) {
+  var _x = 0, _y = 0;
+
+  if (y !== undefined) {
+    _x = size;
+    _y = y;
+  } else if (typeof size === 'object' && size._className === 'Vector') {
+    _x = size.x;
+    _y = size.y;
+  } else {
+    throw 'Invalid arguments type. Refer to the comments for more informations on accepted arguments type.';
+  }
+
+  var newSize = new Game.Vector(_x, _y);
+  this.hitbox.size.copy(newSize);
+  return;
 };
 
 /**

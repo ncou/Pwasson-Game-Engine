@@ -41,13 +41,20 @@ CollisionSolver.prototype.solve = function (shape1, shape2) {
 CollisionSolver.prototype.RectangleRectangle = function (shape1, shape2) {
   var collisionDirection = Game.Physics.CollisionDirection.NONE;
 
-  // Get the vector to check against.
-  var vX = (shape1.hitbox.position.x + (shape1.hitbox.size.x / 2)) - (shape2.hitbox.position.x + (shape2.hitbox.size.x / 2));
-  var vY = (shape1.hitbox.position.y + (shape1.hitbox.size.y / 2)) - (shape2.hitbox.position.y + (shape2.hitbox.size.y / 2));
+  // Get the vector to check against, take in account the HitBox of the shape, not only it's position.
+  var vX = (shape1.position.x + (shape1.hitbox.size.x / 2)); /* Shape 1 */
+     vX += ((shape1.size.x / 2) - (shape1.hitbox.size.x / 2));
+     vX -= (shape2.position.x + (shape2.hitbox.size.x / 2)); /* Shape 2 */
+     vX += ((shape2.size.x / 2) - (shape2.hitbox.size.x / 2));
+
+  var vY = (shape1.position.y + (shape1.hitbox.size.y / 2)); /* Shape 1 */
+     vY += ((shape1.size.y / 2) - (shape1.hitbox.size.y / 2));
+     vY -= (shape2.position.y + (shape2.hitbox.size.y / 2)); /* Shape 2 */
+     vY += ((shape2.size.y / 2) - (shape2.hitbox.size.y / 2));
 
   // Add the half widths and half heights of the shapes.
-  var hWidths = (shape1.hitbox.size.x / 2) + (shape2.hitbox.size.x / 2);
-  var hHeights = (shape1.hitbox.size.y / 2) + (shape2.hitbox.size.y / 2);
+  var hWidths = (shape1.size.x / 2) + (shape2.size.x / 2);
+  var hHeights = (shape1.size.y / 2) + (shape2.size.y / 2);
 
   /**
   * If the X and Y vectors are less than the half width or half height, they must be inside the shape.
