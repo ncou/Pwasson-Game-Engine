@@ -15,8 +15,8 @@ function Container () {
 * @return Returns the child index if succeed, false if not.
 **/
 Container.prototype.addChild = function (child) {
-  if (typeof child !== 'object') throw 'Child is not an Object.';
-  if (child._className != 'Sprite') throw 'Child is not a Sprite.';
+  if (typeof child !== 'object') throw new Error('Child is not an Object.');
+  if (child._className != 'Sprite') throw new Error('Child is not a Sprite.');
 
   var index = this.childrens.push(child);
   if (this.childrens[index] !== child) return false; // There was an error while pushing the object.
@@ -41,7 +41,7 @@ Container.prototype.removeChild  = function (child) {
     this.childrens.splice(child, 1);
     if (this.childrens[child] === undefined) return true;
   } else { // Error bro!
-    throw 'Invalid argument. Child must be a Sprite OR a Number.';
+    throw new Error('Invalid argument. Child must be a Sprite OR a Number.');
     return false;
   }
 };

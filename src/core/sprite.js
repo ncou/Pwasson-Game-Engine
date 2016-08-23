@@ -219,7 +219,7 @@ Sprite.prototype.setHitboxSize = function (size, y) {
     _x = size.x;
     _y = size.y;
   } else {
-    throw 'Invalid arguments type. Refer to the comments for more informations on accepted arguments type.';
+    throw new Error('Invalid arguments type. Refer to the comments for more informations on accepted arguments type.');
   }
 
   var newSize = new Game.Vector(_x, _y);

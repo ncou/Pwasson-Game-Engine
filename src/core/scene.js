@@ -54,8 +54,8 @@ Scene.prototype.addWorld = function (gravity, properties) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.addChild = function (child) {
-  if (typeof child !== 'object') throw 'Child is not an Object.';
-  if (child._className != 'Sprite') throw 'Child is not a Sprite.';
+  if (typeof child !== 'object') throw new Error('Child is not an Object.');
+  if (child._className != 'Sprite') throw new Error('Child is not a Sprite.');
 
   child._index = this.childrens.length;
   child._parent = this;
@@ -79,7 +79,7 @@ Scene.prototype.addChild = function (child) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) throw 'Child at index ' + index + ' doesn\'t exists.';
+  if (this.childrens[index] === undefined) throw new Error('Child at index ' + index + ' doesn\'t exists.');
 
   this.childrens.splice(index, 1);
   //this.childrens[index] = null;

@@ -120,7 +120,7 @@ Engine.prototype.getMousePos = function (event) {
 * @private {void} _initEvents - Initialize the canvas events and dispatch them.
 **/
 Engine.prototype._initEvents = function () {
-  if (this.scene === null || this.scene === undefined) throw 'Scene is not defined. Set the scene using Game.Engine.setScene()';
+  if (this.scene === null || this.scene === undefined) throw new Error('Scene is not defined. Set the scene using Game.Engine.setScene()');
 
   this.canvas.addEventListener('mouseclick', function (e) {
     this.scene.onMouseClick(e.buttons, this.getMousePos(e));
@@ -162,8 +162,8 @@ Engine.prototype.getTexture = function (textureName) {
 * @param {Scene} scene - The scene object.
 **/
 Engine.prototype.setScene = function (scene) {
-  if (typeof scene !== 'object') throw 'Scene "' + scene + '" is not an Object.';
-  if (scene._className != 'Scene') throw 'Scene "' + scene + '" is not a Scene.';
+  if (typeof scene !== 'object') throw new Error('Scene "' + scene + '" is not an Object.');
+  if (scene._className != 'Scene') throw new Error('Scene "' + scene + '" is not a Scene.');
 
   this.scene = scene;
 };
