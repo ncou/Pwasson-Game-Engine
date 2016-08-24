@@ -34,7 +34,7 @@ SceneMain.prototype.loadAssets = function () {
 SceneMain.prototype.init = function () {
   this.jumping = false;
   this.blocks = [];
-  this.maxBlocks = 25;
+  this.maxBlocks = 20;
   this.setAllStatic = false;
 
   // On keydown, set the key to true (pressed).
@@ -66,6 +66,21 @@ SceneMain.prototype.init = function () {
     collisionGroup: 0,
     shadowColor: 'rgba(73, 169, 66, 1)',
   });
+  
+  // Let's add a physical text, :)
+  this.text = new Game.Text('PwassonEngine', 250, 250, null, {
+    physics: true,
+    draggable: true,
+    buttonMode: true,
+    fontColor: 'rgba(255, 205, 0, 0.5)',
+    fontStyle: 'bold',
+    fontFamily: 'Aller, sans-serif',
+    fontSize: 40,
+    borderColor: '#febd17',
+    borderSize: 3,
+    collisionGroup: 4,
+    collideAgainst: [0, 1, 2, 3, 4 ]
+  });
 
   // Now we add a player sprite, that'll be able to move and jump!
   this.player = new Game.Sprite(400, 100, 40, 40, {
@@ -82,7 +97,7 @@ SceneMain.prototype.init = function () {
     draggable: true,
     selected: false,
     collisionGroup: 1,
-    collideAgainst: [ 0, 1, 3 ],
+    collideAgainst: [ 0, 1, 3, 4 ],
     texture: 'player',
     onMouseHover: function (pos) {
       // WARN: Here, `this` refer to the player instance.
@@ -104,8 +119,10 @@ SceneMain.prototype.init = function () {
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);
+  this.addChild(this.text);
   this.addChild(this.player);
   this.world.addChild(this.ground);
+  this.world.addChild(this.text);
   this.world.addChild(this.player);
 }
 
@@ -122,7 +139,7 @@ SceneMain.prototype.populate = function (count, even) {
     var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
     var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.6)' : 'rgba(0, 174, 239, 0.5)';
     var group = (color == '#33cc99') ? 2 : 3;
-    var against = (color == '#33cc99') ? [ 0, 2, 3 ] : [ 0, 1, 2, 3 ];
+    var against = (color == '#33cc99') ? [ 0, 2, 3, 4 ] : [ 0, 1, 2, 3, 4 ];
 
     var shape = Game.Shape.RECTANGLE;
     this.blocks.push(new Game.Sprite(x, y, width, height, {

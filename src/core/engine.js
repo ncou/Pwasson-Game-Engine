@@ -38,6 +38,7 @@ function Engine () {
     'core/container.js',
     'core/shape.js',
     'core/sprite.js',
+    'core/text.js',
     'core/physics.js',
     'core/physics/world.js',
     'core/physics/collisionsolver.js',
