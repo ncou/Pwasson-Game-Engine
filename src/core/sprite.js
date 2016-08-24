@@ -186,10 +186,12 @@ Sprite.prototype.draw = function (delta) {
 Sprite.prototype.update = function (delta) {
   if (this.lock) return;
   
-  if (this.isMouseHover()) {
-    this.onMouseHover(Game.Engine.mouse);
-  } else {
-    this.onMouseOut();
+  if (!this.selected) {
+    if (this.isMouseHover()) {
+      this.onMouseHover(Game.Engine.mouse);
+    } else {
+      this.onMouseOut();
+    }
   }
 
   if (this.isOffscreen() && !this.canGoOffscreen && !this.static && !this.needsUpdate) {
@@ -245,10 +247,13 @@ Sprite.prototype._mouseClick = function (button, position) {
 * @private {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
 **/
 Sprite.prototype._mouseDown = function (button, position) {
+  if (this.selected) return;
   if (this.draggable) {
     this.selected = true;
-    this.position.x = (position.x - this.anchor.x);
-    this.position.y = (position.y - this.anchor.y);
+    this._baseClick = new Game.Vector((this.position.x - position.x), (this.position.y - position.y));
+    
+    //this.position.x = (position.x - this.anchor.x);
+    //this.position.y = (position.y - this.anchor.y);
     
     if (this.physics && !this.static) {
       this.static = true; // We make the sprite static to avoid glitches related to physics.
@@ -266,6 +271,7 @@ Sprite.prototype._mouseRelease = function (button, position) {
     
     if (this.physics && this.static) {
       this.static = false;
+      this._baseClick = null;
     }
   }
   this.onMouseRelease(button, position);
@@ -275,6 +281,7 @@ Sprite.prototype._mouseRelease = function (button, position) {
 * @private {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
 **/
 Sprite.prototype._mouseHover = function (position) {
+  if (this.draggable && this.selected) return;
   this.onMouseHover(position);
 };
 
@@ -283,8 +290,8 @@ Sprite.prototype._mouseHover = function (position) {
 **/
 Sprite.prototype._mouseMove = function (position) {
   if (this.draggable && this.selected) {
-    this.position.x = (position.x - this.anchor.x);
-    this.position.y = (position.y - this.anchor.y);
+    this.position.x = position.x + this._baseClick.x;
+    this.position.y = position.y + this._baseClick.y;
   }
   this.onMouseMove(position);
 };

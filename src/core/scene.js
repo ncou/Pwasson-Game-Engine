@@ -22,6 +22,7 @@ function Scene (name) {
   
   this.maxFPS = 60;
   this.delta = 0;
+  this.lock = false;
 
   this._now = 0;
   this._then = Date.now();
@@ -37,6 +38,55 @@ function Scene (name) {
 Scene.prototype._init = function () {
   console.log('Current scene:', this.name);
   this._loop();
+};
+
+/**
+* @private {void} _loop - The scene loop. Uses requestAnimationFrame.
+**/
+Scene.prototype._loop = function () {
+  // Let's run requestAnimateFrame (@see engine.js:0).
+  this.raf = requestAnimateFrame(this._loop.bind(this));
+  
+  if (this.lock) return;
+
+  this._now = Date.now();
+  this.delta = this._now - this._then;
+
+  if (this.delta > this._interval) {
+    this._then = this._now - (this.delta % this._interval);
+    this.fps = Math.floor(1 * this.delta);
+
+    Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
+    Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);
+
+    // Run the scene update method.
+    this.update(this.delta);
+    
+    // If the scene has a physics world, let's update.
+    if (this.world !== undefined && this.world != null) {
+      this.world._update(this.delta);
+    }
+
+    /**
+    * Let simply update every childrens this scene has.
+    * Pass the scene delta time to update method.
+    **/
+    for (var i = 0; i < this.childrens.length; i++) {
+      var child = this.childrens[i];
+      if (child.isMouseHover()) {
+        Game.setCursor('pointer');
+      } else {
+        Game.setCursor('default');
+      }
+      
+      if (child.needsUpdate === true) {
+        child.update(this.delta);
+        this.childrens[i].last.position.copy(child.position);
+        this.childrens[i].last.size.copy(child.size);
+        this.childrens[i].last.rotation = child.rotation;
+      }
+    }
+  }
 };
 
 /**
@@ -91,54 +141,6 @@ Scene.prototype.removeChild = function (index) {
 };
 
 /**
-* @private {void} _loop - The scene loop. Uses requestAnimationFrame.
-**/
-Scene.prototype._loop = function () {
-  // Let's run requestAnimateFrame (@see engine.js:0).
-  this.raf = requestAnimateFrame(this._loop.bind(this));
-
-  this._now = Date.now();
-  this.delta = this._now - this._then;
-
-  if (this.delta > this._interval) {
-    this._then = this._now - (this.delta % this._interval);
-    this.fps = Math.floor(1 * this.delta);
-
-    Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
-
-    Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);
-
-    // Run the scene update method.
-    this.update(this.delta);
-    
-    // If the scene has a physics world, let's update.
-    if (this.world !== undefined && this.world != null) {
-      this.world._update(this.delta);
-    }
-
-    /**
-    * Let simply update every childrens this scene has.
-    * Pass the scene delta time to update method.
-    **/
-    for (var i = 0; i < this.childrens.length; i++) {
-      var child = this.childrens[i];
-      if (child.isMouseHover()) {
-        Game.setCursor('pointer');
-      } else {
-        Game.setCursor('default');
-      }
-      
-      if (child.needsUpdate === true) {
-        child.update(this.delta);
-        this.childrens[i].last.position.copy(child.position);
-        this.childrens[i].last.size.copy(child.size);
-        this.childrens[i].last.rotation = child.rotation;
-      }
-    }
-  }
-};
-
-/**
 * @public {void} stop - Stop the scene loop.
 *
 * @note May not work properly on some browsers.
@@ -153,6 +155,41 @@ Scene.prototype.stop = function () {
 * @param {int} delta - Scene's delta time.
 **/
 Scene.prototype.update = function (delta) {};
+
+/**
+* @public {String} toImage - Return the current scene as base64 image string.
+* @param {String|Color} background - The image background color. Defaults to Game.Config.canvas.bgColor if not specified.
+* @param {String} mimeType - The image mime type. Defaults to `image/png` if not specified.
+**/
+Scene.prototype.toImage = function (background, mimeType) {
+  var bg = (background || Game.Config.canvas.bgColor || 'white');
+  var mime = (mimeType || 'image/png');
+  
+  this.lock = true;
+  
+  // Let's cache our current canvas state for restoring it later.
+  var data = Game.context.getImageData(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
+  var compositeOperation = Game.context.globalCompositeOperation;
+  
+  // Now we draw the background.
+  Game.context.globalCompositeOperation = "destination-over";
+  Game.context.fillStyle = bg;
+  Game.context.fillRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
+  
+  var imageData = Game.Engine.canvas.toDataURL(mime);
+  
+  // Let's reset the canvas as it was before image capture.
+  Game.context.save();
+    Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
+    Game.context.putImageData(data, 0, 0);
+    Game.context.globalCompositeOperation = compositeOperation;
+  Game.context.restore();
+  
+  this.lock = false;
+  
+  // Finally return the data uri.
+  return imageData;
+};
 
 /**
 * @public {void} onMouseClick - Function that gets called when the canvas got clicked.
@@ -220,9 +257,8 @@ Scene.prototype.onMouseHover = function (position) {
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i].isMouseHover()) {
       this.childrens[i]._mouseHover(position);
-    } else {
-      this.childrens[i]._mouseMove(position);
     }
+    this.childrens[i]._mouseMove(position);
   }
 };
 
