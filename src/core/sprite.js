@@ -269,6 +269,7 @@ Sprite.prototype._mouseDown = function (button, position) {
 Sprite.prototype._mouseRelease = function (button, position) {
   if (this.draggable) {
     this.selected = false;
+    Game.setCursor('pointer');
     
     if (this.physics && this.static) {
       this.static = false;
