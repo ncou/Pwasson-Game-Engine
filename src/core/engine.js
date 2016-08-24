@@ -217,7 +217,7 @@ if (Game === undefined) {
 * @param {String} cursor - The cursor style.
 **/
 Game.setCursor = function (cursor) {
-  if (this.lastCursor == cursor) return; // Avoid updating dom uselessly.
+  if (this.lastCursor != null && this.lastCursor == cursor) return; // Avoid updating dom uselessly.
   Game.Engine.canvas.style.cursor = cursor;
   this.lastCursor = cursor;
 };
