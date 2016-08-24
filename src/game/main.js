@@ -62,7 +62,7 @@ SceneMain.prototype.init = function () {
     borderColor: '#237f52',
     bgColor: 'rgba(73, 169, 66, 0.5)',
     shape: Game.Shape.RECTANGLE,
-    buttonMode: true,
+    buttonMode: false,
     collisionGroup: 0,
     shadowColor: 'rgba(73, 169, 66, 1)',
   });
@@ -98,33 +98,7 @@ SceneMain.prototype.init = function () {
       if (this.texture !== null) {
         this.alpha = 1;
       }
-    },
-    onMouseClick: function (button, position) {
-      if (this.setAllStatic) {
-        for (var i = 0; i < this.childrens.length; i++) {
-          //if (this.childrens[i] == this.player || this.childrens[i] == this.ground) continue;
-
-          this.childrens[i].static = true;
-          this.childrens[i].draggable = false;
-          this.childrens[i].buttonMode = false;
-        }
-        this.setAllStatic = false;
-      } else {
-        for (var i = 0; i < this.childrens.length; i++) {
-          //if (this.childrens[i] == this.player || this.childrens[i] == this.ground) continue;
-
-          this.childrens[i].static = false;
-          this.childrens[i].draggable = true;
-          this.childrens[i].buttonMode = true;
-        }
-        this.setAllStatic = true;
-      }
-      
-      this.player.static = false;
-      this.player.draggable = true;
-      this.player.buttonMode = true;
-      this.ground.static = true;
-    }.bind(this)
+    }
   });
   //this.player.setHitboxSize(2, 10);
 

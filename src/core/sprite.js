@@ -272,6 +272,8 @@ Sprite.prototype._mouseRelease = function (button, position) {
     if (this.physics && this.static) {
       this.static = false;
       this._baseClick = null;
+      this.velocity.x = 0;
+      this.velocity.y = 0;
     }
   }
   this.onMouseRelease(button, position);
@@ -281,6 +283,14 @@ Sprite.prototype._mouseRelease = function (button, position) {
 * @private {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
 **/
 Sprite.prototype._mouseHover = function (position) {
+  /*if (this.buttonMode) {
+    if (this.isMouseHover()) {
+      Game.setCursor('pointer');
+    } else {
+      Game.setCursor('default');
+    }
+  }*/
+
   if (this.draggable && this.selected) return;
   this.onMouseHover(position);
 };

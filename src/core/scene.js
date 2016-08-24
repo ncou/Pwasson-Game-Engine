@@ -73,11 +73,11 @@ Scene.prototype._loop = function () {
     **/
     for (var i = 0; i < this.childrens.length; i++) {
       var child = this.childrens[i];
-      if (child.isMouseHover()) {
+      /*if (child.isMouseHover()) {
         Game.setCursor('pointer');
       } else {
         Game.setCursor('default');
-      }
+      }*/
       
       if (child.needsUpdate === true) {
         child.update(this.delta);
@@ -171,19 +171,20 @@ Scene.prototype.toImage = function (background, mimeType) {
   var data = Game.context.getImageData(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
   var compositeOperation = Game.context.globalCompositeOperation;
   
-  // Now we draw the background.
-  Game.context.globalCompositeOperation = "destination-over";
-  Game.context.fillStyle = bg;
-  Game.context.fillRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
-  
-  var imageData = Game.Engine.canvas.toDataURL(mime);
+  // Now we draw the background and save the image data uri.
+//  Game.context.save();
+    Game.context.globalCompositeOperation = "destination-over";
+    Game.context.fillStyle = bg;
+    Game.context.fillRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
+    var imageData = Game.Engine.canvas.toDataURL(mime);
+//  Game.context.restore();
   
   // Let's reset the canvas as it was before image capture.
-  Game.context.save();
+//  Game.context.save();
     Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
     Game.context.putImageData(data, 0, 0);
     Game.context.globalCompositeOperation = compositeOperation;
-  Game.context.restore();
+//  Game.context.restore();
   
   this.lock = false;
   
@@ -254,8 +255,12 @@ Scene.prototype.onMouseRelease = function (button, position) {
 * @param {Vector} position - The mouse position, calculated properly using Engine.getCanvasPos().
 **/
 Scene.prototype.onMouseHover = function (position) {
+  Game.setCursor('default');
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i].isMouseHover()) {
+      if (this.childrens[i].buttonMode) {
+        Game.setCursor('pointer');
+      }
       this.childrens[i]._mouseHover(position);
     }
     this.childrens[i]._mouseMove(position);
