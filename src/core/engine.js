@@ -130,23 +130,44 @@ Engine.prototype.getMousePos = function (event) {
 Engine.prototype._initEvents = function () {
   if (this.scene === null || this.scene === undefined) throw new Error('Scene is not defined. Set the scene using Game.Engine.setScene()');
 
+  // Mouse click.
   this.canvas.addEventListener('mouseclick', function (e) {
     this.scene.onMouseClick(e.buttons, this.getMousePos(e));
   }.bind(this), false);
 
+  // Touch start.
+  this.canvas.addEventListener('touchstart', function (e) {
+    this.scene.onMouseDown(e.buttons, this.getMousePos(e));
+  }.bind(this), false);
+  
+  // Mouse down.
   this.canvas.addEventListener('mousedown', function (e) {
     this.scene.onMouseDown(e.buttons, this.getMousePos(e));
   }.bind(this), false);
 
+  // Touch stop.
+  this.canvas.addEventListener('touchend', function (e) {
+    this.scene.onMouseRelease(e.buttons, this.getMousePos(e));
+  }.bind(this), false);
+  
+  // Mouse up.
   this.canvas.addEventListener('mouseup', function (e) {
     this.scene.onMouseRelease(e.buttons, this.getMousePos(e));
   }.bind(this), false);
 
+  // Touch move.
+  this.canvas.addEventListener('touchmove', function (e) {
+    this.mouse = this.getMousePos(e);
+    this.scene.onMouseHover(this.mouse);
+  }.bind(this), false);
+  
+  // Mouse move.
   this.canvas.addEventListener('mousemove', function (e) {
     this.mouse = this.getMousePos(e);
     this.scene.onMouseHover(this.mouse);
   }.bind(this), false);
 
+  // Mouse out.
   this.canvas.addEventListener('mouseout', function (e) {
     this.mouse = this.getMousePos(e);
     this.scene.onMouseOut(e.buttons, this.mouse);
