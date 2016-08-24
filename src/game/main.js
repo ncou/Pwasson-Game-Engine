@@ -219,8 +219,6 @@ SceneMain.prototype.keyboard = function (delta) {
       this.jumping = true;
       this.player.velocity.y -= 8;
     }
-    
-    console.log(this.toImage());
   }
 
   // Right: D, RIGHT.
