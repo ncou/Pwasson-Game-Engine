@@ -1,3 +1,11 @@
+// Issue a warning if trying to preview an exported project on disk.
+(function(){
+  // Check for running exported on file protocol
+  if (window.location.protocol.substr(0, 4) === "file") {
+    alert("Warning: When running on the file:/// protocol, browsers block many features from working for security reasons.\nYou may want to run a local web server or upload your game on an HTTP server to have everything working nice.\n\nIf you don't know what this means, simply google for `python pip http-server` and run `http-server` on this directory.");
+  }
+})();
+
 /**
 * @public {Function} requestAnimateFrame - Shim for having requestAnimationFrame to work on every browser.
 * @fallback Fallback to setInterval on browsers that doesn't supports requestAnimationFrame.
