@@ -251,6 +251,7 @@ Sprite.prototype._mouseDown = function (button, position) {
   if (this.draggable) {
     this.selected = true;
     this._baseClick = new Game.Vector((this.position.x - position.x), (this.position.y - position.y));
+    Game.setCursor('move');
     
     //this.position.x = (position.x - this.anchor.x);
     //this.position.y = (position.y - this.anchor.y);
@@ -302,6 +303,7 @@ Sprite.prototype._mouseMove = function (position) {
   if (this.draggable && this.selected) {
     this.position.x = position.x + this._baseClick.x;
     this.position.y = position.y + this._baseClick.y;
+    Game.setCursor('move');
   }
   this.onMouseMove(position);
 };
