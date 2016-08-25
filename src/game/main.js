@@ -51,6 +51,15 @@ SceneMain.prototype.init = function () {
 
   // Let's init our world.
   this.addWorld();
+  
+  // FPS indicator.
+  this.fpsText = new Game.Text('FPS: 0', 10, 10, null, {
+    fontColor: 'black',
+    fontSize: 10,
+    fontFamily: 'monospace',
+    borderSize: 0
+  });
+  this.addChild(this.fpsText);
 
   // Let's add some more physic blocks.
   this.populate(this.maxBlocks);
@@ -233,23 +242,10 @@ SceneMain.prototype.keyboard = function (delta) {
 **/
 SceneMain.prototype.update = function (delta) {
   this.keyboard(delta);
+  this.fpsText.setText('FPS: ' + this.fps);
   
   if (this.player.isOffscreen()) {
     this.player.reset();
-    /*this.player.velocity = new Game.Vector(0, 0);
-    this.player.rotation = 0;
-    this.player.position.copy(this.player.base.position);*/
   }
-  
-  /**
-  * TODO: Debug the remove() method.
-  **/
-  /*for (var i = 0; i < this.blocks.length; i++) {
-    if (this.blocks[i].isOffscreen()) {
-      this.blocks[i].removeFromWorld();
-      this.blocks[i].remove();
-      this.blocks.splice(i, 1);
-    }
-  }*/
 };
 

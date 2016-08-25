@@ -54,10 +54,12 @@ function Sprite (x, y, width, height, properties) {
   this.collideAgainst = [ 0 ];
   this.draggable = false;
   this.fontColor = '#fff';
+  this.force = 0;
   this.friction = 0.2;
   this.gravityAffected = true;
   this.layers = {};
   this.lineJoin = 'round';
+  this.mass = 1;
   this.needsUpdate = true;
   this.physics = false;
   this.position = new Game.Vector(x, y);
@@ -199,7 +201,9 @@ Sprite.prototype.update = function (delta) {
     this.needsUpdate = false;
     return;
   }
-
+  
+  // Let update the sprite force.
+  this.force = this.mass * this.velocity.y;
   this.draw(delta);
   
   // Keep the hitbox position updated.

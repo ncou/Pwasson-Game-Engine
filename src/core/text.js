@@ -83,5 +83,13 @@ Text.prototype.draw = function (delta) {
   Game.context.restore();
 };
 
+/**
+* @public {void} setText - Set the text.
+* @param {String} newText - The new text to set.
+**/
+Text.prototype.setText = function (newText) {
+  this.text = newText;
+};
+
 // Export Text as Game.Text.
 Game.Text = Text;

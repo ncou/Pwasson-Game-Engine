@@ -54,10 +54,10 @@ Scene.prototype._loop = function () {
 
   if (this.delta > this._interval) {
     this._then = this._now - (this.delta % this._interval);
-    this.fps = Math.floor(1 * this.delta);
+    this.fps = Math.floor(1 * this.delta) * 3;
 
     Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
-    Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);
+    //Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);
 
     // Run the scene update method.
     this.update(this.delta);
