@@ -83,7 +83,7 @@ SceneMain.prototype.init = function () {
     buttonMode: true,
     fontColor: 'rgba(255, 205, 0, 0.5)',
     fontStyle: 'bold',
-    fontFamily: 'Aller, sans-serif',
+    fontFamily: 'sans-serif',
     fontSize: 40,
     borderColor: '#febd17',
     borderSize: 3,
