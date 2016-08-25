@@ -69,13 +69,25 @@ Text.prototype.draw = function (delta) {
       
       if (this.fontColor !== null) {
         Game.context.fillStyle = this.fontColor;
-        Game.context.fillText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+        
+        // Needed else Google Chrome doesn't display text when maxWidth is null.
+        if (this.maxWidth == null) {
+          Game.context.fillText(this.text, this.position.x, this.position.y + this.fontSize);
+        } else {
+          Game.context.fillText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+        }
       }
       if (this.borderSize > 0 && this.borderColor !== null) {
         Game.context.strokeStyle = this.borderColor;
         Game.context.lineWidth = this.borderSize;
         Game.context.lineJoin = this.lineJoin;
-        Game.context.strokeText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+        
+        // Needed else Google Chrome doesn't display text when maxWidth is null.
+        if (this.maxWidth == null) {
+          Game.context.strokeText(this.text, this.position.x, this.position.y + this.fontSize);
+        } else {
+          Game.context.strokeText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+        }
       }
     Game.context.closePath();
   Game.context.restore();
