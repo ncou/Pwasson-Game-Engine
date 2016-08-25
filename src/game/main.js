@@ -245,7 +245,7 @@ SceneMain.prototype.update = function (delta) {
   
   // FPS counter related:
   this.fpsText.setText('FPS: ' + this.fps);
-  if (this.fps < 30) {
+  if (this.fps < (this.maxFPS / 2)) {
     this.fpsText.fontColor = 'red';
   } else {
     this.fpsText.fontColor = 'green';
