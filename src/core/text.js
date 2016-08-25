@@ -65,9 +65,7 @@ Text.prototype.draw = function (delta) {
       }
       
       Game.context.font = [ this.fontStyle, this.fontSize + 'pt', this.fontFamily ].join(' ');
-      
-      var txtMeasure = Game.context.measureText(this.text);
-      this.size = new Game.Vector(txtMeasure.width, this.fontSize);
+      this.computeBounds();
       
       if (this.fontColor !== null) {
         Game.context.fillStyle = this.fontColor;
@@ -84,11 +82,23 @@ Text.prototype.draw = function (delta) {
 };
 
 /**
+* @public {void} computeBounds - Recalculate the text size.
+**/
+Text.prototype.computeBounds = function () {
+  Game.context.save();
+    Game.context.font = [ this.fontStyle, this.fontSize + 'pt', this.fontFamily ].join(' ');
+    var txtMeasure = Game.context.measureText(this.text);
+  Game.context.restore();
+  this.size = new Game.Vector(txtMeasure.width, this.fontSize);
+};
+
+/**
 * @public {void} setText - Set the text.
 * @param {String} newText - The new text to set.
 **/
 Text.prototype.setText = function (newText) {
   this.text = newText;
+  this.computeBounds();
 };
 
 // Export Text as Game.Text.
