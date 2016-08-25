@@ -27,6 +27,9 @@ function Scene (name) {
   this._now = 0;
   this._then = Date.now();
   this._interval = 1000 / this.maxFPS;
+  
+  this._lastCalledTime;
+  this.fps = 0;
 
   // Let's run our infinite loop.
   this._init();
@@ -48,13 +51,21 @@ Scene.prototype._loop = function () {
   this.raf = requestAnimateFrame(this._loop.bind(this));
   
   if (this.lock) return;
+  
+  if (!this._lastCalledTime) {
+    this._lastCalledTime = Date.now();
+    this.fps = 0;
+    return;
+  }
 
   this._now = Date.now();
+  var d = (this._now - this._lastCalledTime) / 1000;
+  this._lastCalledTime = Date.now();
+  this.fps = Math.floor(1 / d);
   this.delta = this._now - this._then;
 
   if (this.delta > this._interval) {
     this._then = this._now - (this.delta % this._interval);
-    this.fps = Math.floor(1 * this.delta) * 3;
 
     Game.context.clearRect(0, 0, Game.Config.canvas.width, Game.Config.canvas.height);
     //Game.context.fillText('FPS: ' + (this.fps * 3), 10, 20);

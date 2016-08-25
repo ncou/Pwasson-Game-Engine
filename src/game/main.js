@@ -55,7 +55,7 @@ SceneMain.prototype.init = function () {
   // FPS indicator.
   this.fpsText = new Game.Text('FPS: 0', 10, 10, null, {
     fontColor: 'black',
-    fontSize: 10,
+    fontSize: 8,
     fontFamily: 'monospace',
     borderSize: 0
   });
@@ -242,7 +242,14 @@ SceneMain.prototype.keyboard = function (delta) {
 **/
 SceneMain.prototype.update = function (delta) {
   this.keyboard(delta);
+  
+  // FPS counter related:
   this.fpsText.setText('FPS: ' + this.fps);
+  if (this.fps < 30) {
+    this.fpsText.fontColor = 'red';
+  } else {
+    this.fpsText.fontColor = 'green';
+  }
   
   if (this.player.isOffscreen()) {
     this.player.reset();
