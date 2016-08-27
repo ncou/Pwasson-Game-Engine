@@ -60,6 +60,11 @@ SceneMain.prototype.init = function () {
     borderSize: 0
   });
   this.addChild(this.fpsText);
+  
+  this.btnClear = new Game.Button('Clear scene', 10, 30, 100, 30, {
+    padding: { x: 8, y: 4 }
+  });
+  this.addChild(this.btnClear);
 
   // Let's add some more physic blocks.
   this.populate(this.maxBlocks);
@@ -225,14 +230,19 @@ SceneMain.prototype.keyboard = function (delta) {
   if (this.keys[39] || this.keys[68]) {
     this.player.velocity.x += 10;
     this.player.scale.x = 1;
-    this.player.rotation -= 200 / delta;
+    if (this.jumping) {
+      this.player.rotation -= 200 / delta;
+    }
   }
 
   // Left: A, Q, LEFT.
   if (this.keys[37] || this.keys[65] || this.keys[81]) {
     this.player.velocity.x -= 10;
     this.player.scale.x = -1;
-    this.player.rotation -= 200 / delta;
+    
+    if (this.jumping) {
+      this.player.rotation -= 200 / delta;
+    }
   }
 };
 

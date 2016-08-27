@@ -116,7 +116,11 @@ Scene.prototype.addWorld = function (gravity, properties) {
 **/
 Scene.prototype.addChild = function (child) {
   if (typeof child !== 'object') throw new Error('Child is not an Object.');
-  if (child._className != 'Sprite') throw new Error('Child is not a Sprite.');
+  /*if (
+    child._className != 'Sprite' ||
+    child._className != 'Text' ||
+    child._className != 'Button'
+  ) throw new Error('Child is not a Sprite/Text/Button.');*/
 
   child._index = this.childrens.length;
   child._parent = this;

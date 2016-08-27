@@ -4,9 +4,11 @@
 * @param {Number} x - The text position in X.
 * @param {Number} y - The text position in Y.
 * @param {Number} maxWidth - The text max width, used to wrap.
-* @param {Object} properties - The text properties.
+* @param {Object} properties - The text properties. You can use any Sprite properties here.
 **/
 function Text (text, x, y, maxWidth, properties) {
+  this._className = 'Text';
+
   this.anchor = new Game.Vector(.5, .5);
   this.text = text;
   this.position = new Game.Vector(x, y);
@@ -64,7 +66,11 @@ Text.prototype.draw = function (delta) {
         Game.context.shadowOffsetY = this.shadowOffset.y;
       }
       
-      Game.context.font = [ this.fontStyle, this.fontSize + 'pt', this.fontFamily ].join(' ');
+      Game.context.font = [
+        this.fontStyle,
+        this.fontSize + 'pt',
+        this.fontFamily
+      ].join(' ');
       this.computeBounds();
       
       if (this.fontColor !== null) {
@@ -74,7 +80,10 @@ Text.prototype.draw = function (delta) {
         if (this.maxWidth == null) {
           Game.context.fillText(this.text, this.position.x, this.position.y + this.fontSize);
         } else {
-          Game.context.fillText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+          Game.context.fillText(
+            this.text, this.position.x,
+            this.position.y + this.fontSize, this.maxWidth
+          );
         }
       }
       if (this.borderSize > 0 && this.borderColor !== null) {
@@ -86,7 +95,10 @@ Text.prototype.draw = function (delta) {
         if (this.maxWidth == null) {
           Game.context.strokeText(this.text, this.position.x, this.position.y + this.fontSize);
         } else {
-          Game.context.strokeText(this.text, this.position.x, this.position.y + this.fontSize, this.maxWidth);
+          Game.context.strokeText(
+            this.text, this.position.x,
+            this.position.y + this.fontSize, this.maxWidth
+          );
         }
       }
     Game.context.closePath();
