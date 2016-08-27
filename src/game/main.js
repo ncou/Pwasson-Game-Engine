@@ -53,18 +53,19 @@ SceneMain.prototype.init = function () {
   this.addWorld();
   
   // FPS indicator.
-  this.fpsText = new Game.Text('FPS: 0', 10, 10, null, {
+  var textProps = {
     fontColor: 'black',
     fontSize: 8,
     fontFamily: 'monospace',
     borderSize: 0
-  });
-  this.addChild(this.fpsText);
+  };
   
-  this.btnClear = new Game.Button('Clear scene', 10, 30, 100, 30, {
-    padding: { x: 8, y: 4 }
-  });
-  this.addChild(this.btnClear);
+  this.textFPS = new Game.Text('FPS: 0', 10, 10, null, textProps);
+  this.textChilds = new Game.Text('Sprites: 0', 10, 25, null, textProps);
+  this.textWorldChilds = new Game.Text('Bodies: 0', 10, 40, null, textProps);
+  this.addChild(this.textFPS, true);
+  this.addChild(this.textChilds, true);
+  this.addChild(this.textWorldChilds, true);
 
   // Let's add some more physic blocks.
   this.populate(this.maxBlocks);
@@ -252,17 +253,31 @@ SceneMain.prototype.keyboard = function (delta) {
 **/
 SceneMain.prototype.update = function (delta) {
   this.keyboard(delta);
-  
+
   // FPS counter related:
-  this.fpsText.setText('FPS: ' + this.fps);
+  this.textFPS.setText('FPS: ' + this.fps);
   if (this.fps < (this.maxFPS / 2)) {
-    this.fpsText.fontColor = 'red';
+    this.textFPS.fontColor = 'red';
   } else {
-    this.fpsText.fontColor = 'green';
+    this.textFPS.fontColor = 'green';
   }
-  
+
   if (this.player.isOffscreen()) {
     this.player.reset();
   }
+
+  for(var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+    if (this.childrens[i].isOffscreen() === false) {
+      continue;
+    } else {
+      this.childrens[i].removeFromWorld();
+      this.childrens[i].remove();
+    }
+  }
+  
+  // Childs counter related:
+  this.textChilds.setText('Sprites: ' + this.getChildCount());
+  this.textWorldChilds.setText('Bodies: ' + this.world.getChildCount());
 };
 

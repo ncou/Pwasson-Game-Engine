@@ -14,11 +14,14 @@ function World (parentScene, gravity, properties) {
   this._parent = parentScene;
 
   this.friction = new Game.Vector(0.3, 0.3);
-  this.gravity = (gravity || new Game.Vector(0, 9.8));
+  this.gravity = gravity || new Game.Vector(0, 9.8);
   this.restitution = new Game.Vector(0.2, 0.2);
 
   this.childrens = [];
   this._solver = new Game.Physics.CollisionSolver();
+  
+  this._childCountCached = 0;
+  this._childCountChanged = true;
 
   Game.merge(this, properties);
   this._init();
@@ -37,6 +40,8 @@ World.prototype._init = function () {
 **/
 World.prototype._update = function (delta) {
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+  
     var child = this.childrens[i];
     if (child.needsUpdate === true) {
       if (child.static == false) {
@@ -48,6 +53,8 @@ World.prototype._update = function (delta) {
         
         // Let's check for collisions.
         for (var j = 0; j < this.childrens.length; j++) {
+          if (this.childrens[j] === undefined) continue;
+        
           var oChild = this.childrens[j];
           if (oChild != child) {
             this._solver.solve(child, oChild);
@@ -77,6 +84,7 @@ World.prototype.addChild = function (sprite) {
     this.childrens[index] !== undefined &&
     this.childrens[index]._className === 'Sprite'
   ) {
+    this._childCountChanged = true;
     return true;
   }
   return false;
@@ -89,11 +97,31 @@ World.prototype.addChild = function (sprite) {
 World.prototype.removeChild = function (index) {
   if (this.childrens[index] === undefined) throw new Error('Child at index ' + index + ' doesn\'t exists.');
 
-  this.childrens.splice(index, 1);
+  delete this.childrens[index];
+
   if (this.childrens[index] === undefined) {
+    this._childCountChanged = true;
     return true;
   }
   return false;
+};
+
+/**
+* @public {Number} getChildCount - Return the number of childrens the world has.
+**/
+World.prototype.getChildCount = function () {
+  if (this._childCountChanged === false) return this._childCountCached;
+
+  var counter = 0;
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+    counter++;
+  }
+  
+  this._childCountCached = counter;
+  this._childCountChanged = false;
+  
+  return counter;
 };
 
 // Export World as Game.Physics.World

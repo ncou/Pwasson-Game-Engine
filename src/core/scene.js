@@ -23,13 +23,14 @@ function Scene (name) {
   this.maxFPS = 60;
   this.delta = 0;
   this.lock = false;
+  this.fps = 0;
 
   this._now = 0;
   this._then = Date.now();
   this._interval = 1000 / this.maxFPS;
-  
   this._lastCalledTime;
-  this.fps = 0;
+  this._childCountCached = 0;
+  this._childCountChanged = true;
 
   // Let's run our infinite loop.
   this._init();
@@ -84,11 +85,7 @@ Scene.prototype._loop = function () {
     **/
     for (var i = 0; i < this.childrens.length; i++) {
       var child = this.childrens[i];
-      /*if (child.isMouseHover()) {
-        Game.setCursor('pointer');
-      } else {
-        Game.setCursor('default');
-      }*/
+      if (child === undefined) continue;
       
       if (child.needsUpdate === true) {
         child.update(this.delta);
@@ -114,7 +111,7 @@ Scene.prototype.addWorld = function (gravity, properties) {
 * @param {Object} child - The object to add to this scene.
 * @return true if success, false if failure.
 **/
-Scene.prototype.addChild = function (child) {
+Scene.prototype.addChild = function (child, dontCount) {
   if (typeof child !== 'object') throw new Error('Child is not an Object.');
   /*if (
     child._className != 'Sprite' ||
@@ -122,6 +119,9 @@ Scene.prototype.addChild = function (child) {
     child._className != 'Button'
   ) throw new Error('Child is not a Sprite/Text/Button.');*/
 
+  if (dontCount) {
+    child._dontCount = true;
+  }
   child._index = this.childrens.length;
   child._parent = this;
   child.remove = function () { this._parent.removeChild(this._index); };
@@ -132,6 +132,7 @@ Scene.prototype.addChild = function (child) {
       this.world.childrens.push(child);
     }
   
+    this._childCountChanged = true;
     return true;
   }
   
@@ -146,13 +147,33 @@ Scene.prototype.addChild = function (child) {
 Scene.prototype.removeChild = function (index) {
   if (this.childrens[index] === undefined) throw new Error('Child at index ' + index + ' doesn\'t exists.');
 
-  this.childrens.splice(index, 1);
-  //this.childrens[index] = null;
+  delete this.childrens[index];
 
   if (this.childrens[index] === undefined) {
+    this._childCountChanged = true;
     return true;
   }
   return false;
+};
+
+/**
+* @public {Number} getChildCount - Return the number of childrens the scene has.
+**/
+Scene.prototype.getChildCount = function () {
+  if (this._childCountChanged === false) return this._childCountCached;
+
+  var counter = 0;
+  for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+    if (this.childrens[i].dontCount === undefined) {
+      counter++;
+    }
+  }
+  
+  this._childCountCached = counter;
+  this._childCountChanged = false;
+  
+  return counter;
 };
 
 /**
@@ -219,6 +240,8 @@ Scene.prototype.onMouseClick = function (button, position) {
   * If the mouse click has happened into a child, let's tell this sprite it got a click.
   **/
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+  
     if (this.childrens[i].isMouseHover()) {
       this.childrens[i]._mouseClick(button, position);
       return;
@@ -238,6 +261,8 @@ Scene.prototype.onMouseDown = function (button, position) {
   * If the mouse click has happened into a child, let's tell this sprite it got a click.
   **/
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+  
     if (this.childrens[i].isMouseHover()) {
       this.childrens[i]._mouseDown(button, position);
       return;
@@ -257,6 +282,8 @@ Scene.prototype.onMouseRelease = function (button, position) {
   * If the mouse click has happened into a child, let's tell this sprite it got a click.
   **/
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+  
     if (this.childrens[i].isMouseHover()) {
       this.childrens[i]._mouseRelease(button, position);
       return;
@@ -272,6 +299,8 @@ Scene.prototype.onMouseRelease = function (button, position) {
 Scene.prototype.onMouseHover = function (position) {
   Game.setCursor('default');
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+  
     if (this.childrens[i].isMouseHover()) {
       if (this.childrens[i].buttonMode) {
         Game.setCursor('pointer');
@@ -288,6 +317,8 @@ Scene.prototype.onMouseHover = function (position) {
 **/
 Scene.prototype.onMouseOut = function (button, position) {
   for (var i = 0; i < this.childrens.length; i++) {
+    if (this.childrens[i] === undefined) continue;
+
     if (this.childrens[i].isMouseHover() === false) {
       this.childrens[i]._mouseOut(button, position);
     } else { // If mouse goes offscreen
