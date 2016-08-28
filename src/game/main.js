@@ -34,7 +34,7 @@ SceneMain.prototype.loadAssets = function () {
 SceneMain.prototype.init = function () {
   this.jumping = false;
   this.blocks = [];
-  this.maxBlocks = 20;
+  this.defaultCount = 10;
   this.setAllStatic = false;
 
   // On keydown, set the key to true (pressed).
@@ -66,9 +66,27 @@ SceneMain.prototype.init = function () {
   this.addChild(this.textFPS, true);
   this.addChild(this.textChilds, true);
   this.addChild(this.textWorldChilds, true);
+  
+  var textHardProps = {
+    buttonMode: true,
+    fontColor: 'blue',
+    onMouseHover: function () { this.fontColor = 'green'; },
+    onMouseOut: function () { this.fontColor = 'blue'; },
+    onMouseRelease: function () {
+      this.defaultCount = this.defaultCount + 20;
+      this.populate(this.defaultCount);
+      this._childCountChanged = true;
+      this.world._childCountChanged = true;
+    }.bind(this)
+  };
+  Game.merge(textHardProps, textProps);
+  this.textHardTest = new Game.Text('+20 objects', 10, 55, null, textHardProps);
+  this.textHardTest.position.x = (Game.Config.canvas.width - this.textHardTest.size.x) - 10;
+  this.textHardTest.position.y = 10;
+  this.addChild(this.textHardTest);
 
   // Let's add some more physic blocks.
-  this.populate(this.maxBlocks);
+  this.populate(this.defaultCount);
 
   // Let's draw a ground, we don't want blocks to fall forever.
   this.ground = new Game.Sprite(100, 520, 600, 40, {
@@ -145,12 +163,12 @@ SceneMain.prototype.init = function () {
 * @public populate - Add some childs to the scene, for demo only.
 * @param {int} count - The number of childs to add.
 **/
-SceneMain.prototype.populate = function (count, even) {
+SceneMain.prototype.populate = function (count) {
   for (var i = 0; i < count; i++) {
     var x = 150 + Game.random(450);
     var y = 50 + Game.random(400);
-    var width = Game.random(100, 25);
-    var height = Game.random(100, 25);
+    var width = Game.random(60, 20);
+    var height = Game.random(60, 20);
     var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
     var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.6)' : 'rgba(0, 174, 239, 0.5)';
     var group = (color == '#33cc99') ? 2 : 3;

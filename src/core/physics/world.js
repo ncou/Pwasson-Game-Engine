@@ -95,7 +95,7 @@ World.prototype.addChild = function (sprite) {
 * @param {int} index - The children index. (sprite._worldIndex)
 **/
 World.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) throw new Error('Child at index ' + index + ' doesn\'t exists.');
+  if (this.childrens[index] === undefined) return;/*throw new Error('Child at index ' + index + ' doesn\'t exists.');*/
 
   delete this.childrens[index];
 

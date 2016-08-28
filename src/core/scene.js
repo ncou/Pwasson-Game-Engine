@@ -145,7 +145,7 @@ Scene.prototype.addChild = function (child, dontCount) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) throw new Error('Child at index ' + index + ' doesn\'t exists.');
+  if (this.childrens[index] === undefined) return; //throw new Error('Child at index ' + index + ' doesn\'t exists.');
 
   delete this.childrens[index];
 
