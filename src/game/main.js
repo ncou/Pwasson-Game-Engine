@@ -63,9 +63,6 @@ SceneMain.prototype.init = function () {
   this.textFPS = new Game.Text('FPS: 0', 10, 10, null, textProps);
   this.textChilds = new Game.Text('Sprites: 0', 10, 25, null, textProps);
   this.textWorldChilds = new Game.Text('Bodies: 0', 10, 40, null, textProps);
-  this.addChild(this.textFPS, true);
-  this.addChild(this.textChilds, true);
-  this.addChild(this.textWorldChilds, true);
   
   var textHardProps = {
     buttonMode: true,
@@ -73,8 +70,8 @@ SceneMain.prototype.init = function () {
     onMouseHover: function () { this.fontColor = 'green'; },
     onMouseOut: function () { this.fontColor = 'blue'; },
     onMouseRelease: function () {
-      this.defaultCount = this.defaultCount + 20;
-      this.populate(this.defaultCount);
+      //this.defaultCount = this.defaultCount + 20;
+      this.populate(20);
       this._childCountChanged = true;
       this.world._childCountChanged = true;
     }.bind(this)
@@ -83,7 +80,6 @@ SceneMain.prototype.init = function () {
   this.textHardTest = new Game.Text('+20 objects', 10, 55, null, textHardProps);
   this.textHardTest.position.x = (Game.Config.canvas.width - this.textHardTest.size.x) - 10;
   this.textHardTest.position.y = 10;
-  this.addChild(this.textHardTest);
 
   // Let's add some more physic blocks.
   this.populate(this.defaultCount);
@@ -152,10 +148,16 @@ SceneMain.prototype.init = function () {
 
   // Finally, add the blocks to both the scene and the physical world.
   this.addChild(this.ground);
-  this.addChild(this.text);
+  //this.addChild(this.text);
   this.addChild(this.player);
+  
+  this.addChild(this.textFPS, true);
+  this.addChild(this.textChilds, true);
+  this.addChild(this.textWorldChilds, true);
+  this.addChild(this.textHardTest, true);
+  
   this.world.addChild(this.ground);
-  this.world.addChild(this.text);
+  //this.world.addChild(this.text);
   this.world.addChild(this.player);
 }
 
@@ -164,12 +166,13 @@ SceneMain.prototype.init = function () {
 * @param {int} count - The number of childs to add.
 **/
 SceneMain.prototype.populate = function (count) {
-  for (var i = 0; i < count; i++) {
-    var x = 150 + Game.random(450);
-    var y = 50 + Game.random(400);
+  for (var i = 0; i < count; i++) { 
+    var x = 100 + Game.random(500);
+    var y = 20 + Game.random(500);
     var width = Game.random(60, 20);
     var height = Game.random(60, 20);
-    var color = (Math.random() > 0.5) ? '#33cc99' : '#0066b2';
+    
+    var color = (Math.random() < 0.4) ? '#33cc99' : '#0066b2';
     var bg = (color == '#33cc99') ? 'rgba(45, 190, 96, 0.6)' : 'rgba(0, 174, 239, 0.5)';
     var group = (color == '#33cc99') ? 2 : 3;
     var against = (color == '#33cc99') ? [ 0, 2, 3, 4 ] : [ 0, 1, 2, 3, 4 ];
@@ -247,7 +250,7 @@ SceneMain.prototype.keyboard = function (delta) {
 
   // Right: D, RIGHT.
   if (this.keys[39] || this.keys[68]) {
-    this.player.velocity.x += 10;
+    this.player.velocity.x += 8;
     this.player.scale.x = 1;
     if (this.jumping) {
       this.player.rotation -= 200 / delta;
@@ -256,7 +259,7 @@ SceneMain.prototype.keyboard = function (delta) {
 
   // Left: A, Q, LEFT.
   if (this.keys[37] || this.keys[65] || this.keys[81]) {
-    this.player.velocity.x -= 10;
+    this.player.velocity.x -= 8;
     this.player.scale.x = -1;
     
     if (this.jumping) {

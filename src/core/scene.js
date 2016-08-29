@@ -1,13 +1,14 @@
 /**
 * @class Scene - Defines a simple game scene that can contains childrens.
 *
-* @param {string} name - The scene name, used in console.log's.
+* @param {String} name - The scene name, used in console.log's.
 *
 * @property {Vector} position - The scene position within the Canvas.
 * @property {Vector} size - The scene size, defaults to the one defined in config.js.
+* @property {Boolean} allowMouseSelection - If set to true, users can use their mouse to select many objects.
 * @property {Array} childrens - The childrens this scene has to update/handle.
 * @property {Physics.World} world - A physical world object.
-* @property {int} maxFPS - The maximum FPS this scene allows. Defaults to 60.
+* @property {Number} maxFPS - The maximum FPS this scene allows. Defaults to 60.
 * @property [readOnly] {int} delta - The scene delta time.
 **/
 function Scene (name) {
@@ -16,6 +17,7 @@ function Scene (name) {
   this.name = name;
   this.position = { x: 0, y: 0 };
   this.size = { width: Game.Config.canvas.width, height: Game.Config.canvas.height };
+  this.allowMouseSelection = true;
 
   this.childrens = [];
   this.world = null;
@@ -31,6 +33,9 @@ function Scene (name) {
   this._lastCalledTime;
   this._childCountCached = 0;
   this._childCountChanged = true;
+  this._selectionStarted = false;
+  this._selectionStartPoint = new Game.Vector(0, 0);
+  this._selectionEndPoint = new Game.Vector(0, 0);
 
   // Let's run our infinite loop.
   this._init();
@@ -60,9 +65,9 @@ Scene.prototype._loop = function () {
   }
 
   this._now = Date.now();
-  var d = (this._now - this._lastCalledTime) / 1000;
+  this.d = (this._now - this._lastCalledTime) / 1000;
   this._lastCalledTime = Date.now();
-  this.fps = Math.floor(1 / d);
+  this.fps = Math.floor(1 / this.d);
   this.delta = this._now - this._then;
 
   if (this.delta > this._interval) {
@@ -76,7 +81,7 @@ Scene.prototype._loop = function () {
     
     // If the scene has a physics world, let's update.
     if (this.world !== undefined && this.world != null) {
-      this.world._update(this.delta);
+      this.world._update(this.d);
     }
 
     /**
@@ -88,11 +93,30 @@ Scene.prototype._loop = function () {
       if (child === undefined) continue;
       
       if (child.needsUpdate === true) {
-        child.update(this.delta);
+        child.update(this.d);
         this.childrens[i].last.position.copy(child.position);
         this.childrens[i].last.size.copy(child.size);
         this.childrens[i].last.rotation = child.rotation;
       }
+    }
+    
+    if (this.allowMouseSelection && this._selectionStarted) {
+      Game.context.save();
+        Game.context.beginPath();
+          Game.context.rect(
+            this._selectionStartPoint.x, this._selectionStartPoint.y,
+            (Game.Engine.mouse.x - this._selectionStartPoint.x),
+            (Game.Engine.mouse.y - this._selectionStartPoint.y)
+          );
+          
+          Game.context.fillStyle = 'rgba(0, 174, 239, 0.2)';
+          Game.context.strokeStyle = '#0066b2';
+          Game.context.lineWidth = 1;
+          
+          Game.context.fill();
+          Game.context.stroke();
+        Game.context.closePath();
+      Game.context.restore();
     }
   }
 };
@@ -145,7 +169,7 @@ Scene.prototype.addChild = function (child, dontCount) {
 * @return true if success, false if failure.
 **/
 Scene.prototype.removeChild = function (index) {
-  if (this.childrens[index] === undefined) return; //throw new Error('Child at index ' + index + ' doesn\'t exists.');
+  if (this.childrens[index] === undefined) return;//throw new Error('Child at index ' + index + ' doesn\'t exists.');
 
   delete this.childrens[index];
 
@@ -241,7 +265,7 @@ Scene.prototype.onMouseClick = function (button, position) {
   **/
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i] === undefined) continue;
-  
+
     if (this.childrens[i].isMouseHover()) {
       this.childrens[i]._mouseClick(button, position);
       return;
@@ -260,13 +284,31 @@ Scene.prototype.onMouseDown = function (button, position) {
   * Let simply loop over every childrens this scene has.
   * If the mouse click has happened into a child, let's tell this sprite it got a click.
   **/
+  var count = 0;
+  var hoveredIndex = null;
   for (var i = 0; i < this.childrens.length; i++) {
     if (this.childrens[i] === undefined) continue;
-  
-    if (this.childrens[i].isMouseHover()) {
-      this.childrens[i]._mouseDown(button, position);
-      return;
+    
+    if (this.childrens[i].selected) {
+      this.childrens[i].selected = false;
+      this.childrens[i]._selectionStop();
     }
+
+    if (this.childrens[i].isMouseHover()) {
+      hoveredIndex = i;
+    }
+  }
+  
+  if (this.allowMouseSelection && this._selectionStarted === false && hoveredIndex == null) {
+    this._selectionStarted = true;
+    this._selectionStartPoint.x = position.x;
+    this._selectionStartPoint.y = position.y;
+  } else {
+    this._selectionStarted = false;
+    this._selectionStartPoint = new Game.Vector(0, 0);
+    this._selectionEndPoint = new Game.Vector(0, 0);
+    
+    this.childrens[hoveredIndex]._mouseDown(button, position);
   }
 };
 
@@ -277,16 +319,39 @@ Scene.prototype.onMouseDown = function (button, position) {
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Scene.prototype.onMouseRelease = function (button, position) {
-  /**
-  * Let simply loop over every childrens this scene has.
-  * If the mouse click has happened into a child, let's tell this sprite it got a click.
-  **/
-  for (var i = 0; i < this.childrens.length; i++) {
-    if (this.childrens[i] === undefined) continue;
+  if (this.allowMouseSelection && this._selectionStarted) {
+    for (var i = 0; i < this.childrens.length; i++) {
+      if (this.childrens[i] === undefined) continue;
+      var selected = (
+        (this._selectionStartPoint.x <= this.childrens[i].position.x) &&
+        ((this.childrens[i].position.x + this.childrens[i].size.x) <= this._selectionEndPoint.x) &&
+        (this._selectionStartPoint.y <= this.childrens[i].position.y) &&
+        ((this.childrens[i].position.y + this.childrens[i].size.y) <= this._selectionEndPoint.y)
+      );
+      
+      if (selected && this.childrens[i].selected === false) {
+        this.childrens[i].selected = true;
+        this.childrens[i]._selectionStart();
+      }
+    }
   
-    if (this.childrens[i].isMouseHover()) {
-      this.childrens[i]._mouseRelease(button, position);
-      return;
+    this._selectionStarted = false;
+    this._selectionStartPoint = new Game.Vector(0, 0);
+    this._selectionEndPoint = new Game.Vector(0, 0);
+  
+    return;
+  } else {
+    /**
+    * Let simply loop over every childrens this scene has.
+    * If the mouse click has happened into a child, let's tell this sprite it got a click.
+    **/
+    for (var i = 0; i < this.childrens.length; i++) {
+      if (this.childrens[i] === undefined) continue;
+
+      if (this.childrens[i].isMouseHover()) {
+        this.childrens[i]._mouseRelease(button, position);
+        return;
+      }
     }
   }
 };
@@ -298,16 +363,24 @@ Scene.prototype.onMouseRelease = function (button, position) {
 **/
 Scene.prototype.onMouseHover = function (position) {
   Game.setCursor('default');
-  for (var i = 0; i < this.childrens.length; i++) {
-    if (this.childrens[i] === undefined) continue;
-  
-    if (this.childrens[i].isMouseHover()) {
-      if (this.childrens[i].buttonMode) {
-        Game.setCursor('pointer');
+
+  if (this.allowMouseSelection && this._selectionStarted) {
+    this._selectionEndPoint.x = position.x;
+    this._selectionEndPoint.y = position.y;
+    
+    console.log(this._selectionStartPoint, this._selectionEndPoint);
+  } else {
+    for (var i = 0; i < this.childrens.length; i++) {
+      if (this.childrens[i] === undefined) continue;
+
+      if (this.childrens[i].isMouseHover()) {
+        if (this.childrens[i].buttonMode) {
+          Game.setCursor('pointer');
+        }
+        this.childrens[i]._mouseHover(position);
       }
-      this.childrens[i]._mouseHover(position);
+      this.childrens[i]._mouseMove(position);
     }
-    this.childrens[i]._mouseMove(position);
   }
 };
 

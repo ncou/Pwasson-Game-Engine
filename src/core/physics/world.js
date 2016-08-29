@@ -48,7 +48,7 @@ World.prototype._update = function (delta) {
         this.childrens[i].velocity.x *= this.friction.x;
         
         if (child.gravityAffected) {
-          this.childrens[i].velocity.y += this.gravity.y / delta;
+          this.childrens[i].velocity.y += this.gravity.y * delta;
         }
         
         // Let's check for collisions.
@@ -57,7 +57,7 @@ World.prototype._update = function (delta) {
         
           var oChild = this.childrens[j];
           if (oChild != child) {
-            this._solver.solve(child, oChild);
+            this._solver.solve(child, oChild, delta);
           }
         }
         

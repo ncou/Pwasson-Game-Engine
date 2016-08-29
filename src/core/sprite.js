@@ -72,6 +72,7 @@ function Sprite (x, y, width, height, properties) {
   this.size = new Game.Vector(width, height);
   this.shape = Game.Shape.RECTANGLE;
   this.hitbox = new Game.HitBox(this.shape, this.position, new Game.Vector(0, 0));
+  this.selected = false;
   this.speed = 20;
   this.static = false;
   this.texture = null;
@@ -90,7 +91,7 @@ function Sprite (x, y, width, height, properties) {
   };
   
   Game.merge(this, properties);
-  this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
+  this.hitbox = new Game.HitBox(this.shape, this.position, this.size.add(new Game.Vector(this.borderSize, this.borderSize)));
 
   this._init();
 };
@@ -248,6 +249,24 @@ Sprite.prototype._mouseClick = function (button, position) {
 };
 
 /**
+* @private {void} _selectionStart - The proxy function for selection start. Takes the same args as onSelectionStart.
+**/
+Sprite.prototype._selectionStart = function () {
+  console.log('Sprite selected', this.position);
+  this.borderColor = 'red';
+  this.onSelectionStart();
+};
+
+/**
+* @private {void} _selectionStop - The proxy function for selection stop. Takes the same args as onSelectionStop.
+**/
+Sprite.prototype._selectionStop = function () {
+  console.log('Sprite unselected', this.position);
+  this.borderColor = this.color;
+  this.onSelectionStop();
+};
+
+/**
 * @private {void} _mouseDown - The proxy function for mouse down. Takes the same args as onMouseDown.
 **/
 Sprite.prototype._mouseDown = function (button, position) {
@@ -319,6 +338,16 @@ Sprite.prototype._mouseMove = function (position) {
 Sprite.prototype._mouseOut = function () {
   this.onMouseOut();
 };
+
+/**
+* @public {void} onSelectionStart - Function that gets called when the sprite is selected.
+**/
+Sprite.prototype.onSelectionStart = function () {};
+
+/**
+* @public {void} onSelectionStop - Function that gets called when the sprite is deselected.
+**/
+Sprite.prototype.onSelectionStop = function () {};
 
 /**
 * @public {void} onMouseClick - Function that gets called when the sprite got clicked.
