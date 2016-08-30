@@ -14,7 +14,7 @@ function World (parentScene, gravity, properties) {
   this._parent = parentScene;
 
   this.friction = new Game.Vector(0.3, 0.3);
-  this.gravity = gravity || new Game.Vector(0, 9.8);
+  this.gravity = gravity || new Game.Vector(0, (9.8 * 2));
   this.restitution = new Game.Vector(0.2, 0.2);
 
   this.childrens = [];
