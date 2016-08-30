@@ -1,40 +1,41 @@
 /**
 * @class Sprite - Defines a simple Sprite that can be added to a Scene.
 *
-* @param {int} x - Sprite's position in X.
-* @param {int} y - Sprite's position in Y.
-* @param {int} width - Sprite's width.
-* @param {int} height - Sprite's height.
+* @param {Number} x - Sprite's position in X.
+* @param {Number} y - Sprite's position in Y.
+* @param {Number} width - Sprite's width.
+* @param {Number} height - Sprite's height.
 * @param {String|Texture} texture - The sprite texture. If {string}, Engine.getTexture is called.
 * @param {Object} properties - The sprite properties. Refers to the @properties fields.
 *
-* @property {int} alpha - The sprite opacity. Must be between 0 and 1.
-* @property {Vector} anchor - Specify the anchor point of the sprite (for rotation).
+* @property {Number} alpha - The sprite opacity. Must be between 0 and 1.
+* @property {Booleanean} allowSelection - If set to true and Scene.allowMouseSelection is set to true, this will be selectable.
+* @property {Vector} anchor - Specify the anchor poNumber of the sprite (for rotation).
 * @property {String|Color} bgColor - The sprite background color. If null, no background will be drawn.
 * @property {String|Color} borderColor - The sprite border color. If null, no border will be drawn.
-* @property {int} borderSize - The sprite border size. If 0, no border will be drawn.
-* @property {bool} buttonMode - If true, once the sprite got hovered, cursor changes to pointer.
-* @property {bool} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
-* @property {int} collisionGroup - The sprite collision group, used in physics with collideAgainst.
-* @property {Array<int>} collideAgainst - The collision groups that the sprite can collide against.
-* @property {bool} draggable - If true, the sprite can be dragged by the mouse.
+* @property {Number} borderSize - The sprite border size. If 0, no border will be drawn.
+* @property {Boolean} buttonMode - If true, once the sprite got hovered, cursor changes to poNumberer.
+* @property {Boolean} canGoOffscreen - If true, once the sprite goes offcanvas, it won't be updated until it get visible.
+* @property {Number} collisionGroup - The sprite collision group, used in physics with collideAgainst.
+* @property {Array<Number>} collideAgainst - The collision groups that the sprite can collide against.
+* @property {Boolean} draggable - If true, the sprite can be dragged by the mouse.
 * @property {String|Color} fontColor - Used if the sprite contains some text.
-* @property {int} friction - The sprite friction, used in physics.
+* @property {Number} friction - The sprite friction, used in physics.
 * @property {Object} layers - The different layers used to animate the sprite.
 * @property {String} lineJoin - The sprite lineJoin, used in storkes/borders. (Allowed: miter, round, bevel)
-* @property {bool} needsUpdate - If true the sprite will be update, else it wont.
-* @property {bool} physics - If true the sprite will be given a hitbox and will be able to use the scene physic world.
+* @property {Boolean} needsUpdate - If true the sprite will be update, else it wont.
+* @property {Boolean} physics - If true the sprite will be given a hitbox and will be able to use the scene physic world.
 * @property {Vector} position - The sprite position.
-* @property {int} restitution - The sprite restitution, used in physics.
-* @property {int} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
+* @property {Number} restitution - The sprite restitution, used in physics.
+* @property {Number} rotation - The sprite rotation angle in degrees. Converted in radians using: `angle * Math.PI / 180`.
 * @property {Vector} scale - The sprite scale factors.
-* @property {int} shadowBlur - The sprite shadow blur factor.
+* @property {Number} shadowBlur - The sprite shadow blur factor.
 * @property {String|Color} shadowColor - The sprite shadow color. If null, no shadow will be displayed.
 * @property {Vector} shadowOffset - The sprite shadow offsets.
 * @property {Shape} shape - The sprite shape. Used for drawing, also used for physics as the hitbox.
 * @property {Vector} size - The sprite size. size.x = width, size.y = height.
-* @property {int} speed - The sprite animation speed.
-* @property {bool} static - If set to true, the sprite will only be updated when another sprite erased it. Can't move.
+* @property {Number} speed - The sprite animation speed.
+* @property {Boolean} static - If set to true, the sprite will only be updated when another sprite erased it. Can't move.
 * @property {Texture} texture - The sprite texture.
 * @property {Vector} velocity - The sprite velocity. Used for physics.
 * @property {Object} last - The sprite last position, rotation and size.
@@ -105,7 +106,7 @@ Sprite.prototype._init = function () {
 
 /**
 * @public {void} draw - Draw the sprite using options in `this`.
-* @param {double} delta - The scene delta time. Can be 0.
+* @param {Number} delta - The scene delta time. Can be 0.
 **/
 Sprite.prototype.draw = function (delta) {
   Game.context.save();
@@ -184,7 +185,7 @@ Sprite.prototype.draw = function (delta) {
 
 /**
 * @public {void} update - The update loop called from the scene.
-* @param {double} delta - The scene delta time. Can be 0.
+* @param {Number} delta - The scene delta time. Can be 0.
 **/
 Sprite.prototype.update = function (delta) {
   if (this.lock) return;
@@ -214,7 +215,7 @@ Sprite.prototype.update = function (delta) {
 /**
 * @public {void} setHitboxSize - Method to set the hitbox size.
 * @param {Vector} size - The hitbox's new size to set.
-* @param (optional) {int} y - The hitbox's new size in Y. If defined, permits to use `size` as a Number for X.
+* @param (optional) {Number} y - The hitbox's new size in Y. If defined, permits to use `size` as a Number for X.
 **/
 Sprite.prototype.setHitboxSize = function (size, y) {
   var _x = 0, _y = 0;
@@ -252,7 +253,7 @@ Sprite.prototype._mouseClick = function (button, position) {
 * @private {void} _selectionStart - The proxy function for selection start. Takes the same args as onSelectionStart.
 **/
 Sprite.prototype._selectionStart = function () {
-  console.log('Sprite selected', this.position);
+  this._borderColor = this.borderColor;
   this.borderColor = 'red';
   this.onSelectionStart();
 };
@@ -261,8 +262,7 @@ Sprite.prototype._selectionStart = function () {
 * @private {void} _selectionStop - The proxy function for selection stop. Takes the same args as onSelectionStop.
 **/
 Sprite.prototype._selectionStop = function () {
-  console.log('Sprite unselected', this.position);
-  this.borderColor = this.color;
+  this.borderColor = this._borderColor;
   this.onSelectionStop();
 };
 
@@ -308,14 +308,6 @@ Sprite.prototype._mouseRelease = function (button, position) {
 * @private {void} _mouseHover - The proxy function for mouse hover. Takes the same args as onMouseHover.
 **/
 Sprite.prototype._mouseHover = function (position) {
-  /*if (this.buttonMode) {
-    if (this.isMouseHover()) {
-      Game.setCursor('pointer');
-    } else {
-      Game.setCursor('default');
-    }
-  }*/
-
   if (this.draggable && this.selected) return;
   this.onMouseHover(position);
 };
@@ -324,7 +316,7 @@ Sprite.prototype._mouseHover = function (position) {
 * @private {void} _mouseMove - The proxy function for mouse move. Takes the same args as onMouseMove.
 **/
 Sprite.prototype._mouseMove = function (position) {
-  if (this.draggable && this.selected) {
+  if (this.draggable && this.selected && this._baseClick !== undefined && this._baseClick !== null) {
     this.position.x = position.x + this._baseClick.x;
     this.position.y = position.y + this._baseClick.y;
     Game.setCursor('move');
@@ -352,7 +344,7 @@ Sprite.prototype.onSelectionStop = function () {};
 /**
 * @public {void} onMouseClick - Function that gets called when the sprite got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Sprite.prototype.onMouseClick = function (button, position) {};
@@ -360,7 +352,7 @@ Sprite.prototype.onMouseClick = function (button, position) {};
 /**
 * @public {void} onMouseDown - Function that gets called when the sprite got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Sprite.prototype.onMouseDown = function (button, position) {};
@@ -368,7 +360,7 @@ Sprite.prototype.onMouseDown = function (button, position) {};
 /**
 * @public {void} onMouseRelease - Function that gets called when the sprite click got released.
 * @event This function only gets called from the engine, you shouldn't trigger it manually.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Sprite.prototype.onMouseRelease = function (button, position) {};
@@ -405,7 +397,7 @@ Sprite.prototype.reset = function () {
 };
 
 /**
-* @public {bool} positionChanged - Returns true if the position changed, false if not.
+* @public {Boolean} positionChanged - Returns true if the position changed, false if not.
 **/
 Sprite.prototype.positionChanged = function () {
   return !!(
@@ -415,14 +407,14 @@ Sprite.prototype.positionChanged = function () {
 };
 
 /**
-* @public {bool} rotationChanged - Returns true if the rotation changed, false if not.
+* @public {Boolean} rotationChanged - Returns true if the rotation changed, false if not.
 **/
 Sprite.prototype.rotationChanged = function () {
   return !!(this.rotation == this.last.rotation);
 };
 
 /**
-* @public {bool} sizeChanged - Returns true if the size changed, false if not.
+* @public {Boolean} sizeChanged - Returns true if the size changed, false if not.
 **/
 Sprite.prototype.sizeChanged = function () {
   return !!(
@@ -432,7 +424,7 @@ Sprite.prototype.sizeChanged = function () {
 };
 
 /**
-* @public {bool} isOffscreen - Returns true if the sprite is offscreen, false if not.
+* @public {Boolean} isOffscreen - Returns true if the sprite is offscreen, false if not.
 **/
 Sprite.prototype.isOffscreen = function () {
   return (
@@ -442,7 +434,7 @@ Sprite.prototype.isOffscreen = function () {
 };
 
 /**
-* @public {bool} isMouseHover - Returns true if the mouse is hover the sprite, false if not.
+* @public {Boolean} isMouseHover - Returns true if the mouse is hover the sprite, false if not.
 **/
 Sprite.prototype.isMouseHover = function (mousePosition) {
   if (mousePosition === undefined) {

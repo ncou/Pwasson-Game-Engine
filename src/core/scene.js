@@ -9,7 +9,7 @@
 * @property {Array} childrens - The childrens this scene has to update/handle.
 * @property {Physics.World} world - A physical world object.
 * @property {Number} maxFPS - The maximum FPS this scene allows. Defaults to 60.
-* @property [readOnly] {int} delta - The scene delta time.
+* @property [readOnly] {Number} delta - The scene delta time.
 **/
 function Scene (name) {
   this._className = 'Scene';
@@ -131,7 +131,7 @@ Scene.prototype.addWorld = function (gravity, properties) {
 };
 
 /**
-* @public {bool} addChild - Add a child to the scene.
+* @public {Boolean} addChild - Add a child to the scene.
 * @param {Object} child - The object to add to this scene.
 * @return true if success, false if failure.
 **/
@@ -164,8 +164,8 @@ Scene.prototype.addChild = function (child, dontCount) {
 };
 
 /**
-* @public {bool} removeChild - Remove a child from the scene.
-* @param {int} index - The object's index to remove from this scene.
+* @public {Boolean} removeChild - Remove a child from the scene.
+* @param {Number} index - The object's index to remove from this scene.
 * @return true if success, false if failure.
 **/
 Scene.prototype.removeChild = function (index) {
@@ -212,7 +212,7 @@ Scene.prototype.stop = function () {
 
 /**
 * @public {void} update - The scene update function. MUST be used by extended scenes instead of _loop.
-* @param {int} delta - Scene's delta time.
+* @param {Number} delta - Scene's delta time.
 **/
 Scene.prototype.update = function (delta) {};
 
@@ -255,7 +255,7 @@ Scene.prototype.toImage = function (background, mimeType) {
 /**
 * @public {void} onMouseClick - Function that gets called when the canvas got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Scene.prototype.onMouseClick = function (button, position) {
@@ -276,7 +276,7 @@ Scene.prototype.onMouseClick = function (button, position) {
 /**
 * @public {void} onMouseDown - Function that gets called when the canvas got clicked.
 * @event This function only gets called from the engine, you shouldn't trigger it manually, use Engine.click() instead.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Scene.prototype.onMouseDown = function (button, position) {
@@ -308,14 +308,16 @@ Scene.prototype.onMouseDown = function (button, position) {
     this._selectionStartPoint = new Game.Vector(0, 0);
     this._selectionEndPoint = new Game.Vector(0, 0);
     
-    this.childrens[hoveredIndex]._mouseDown(button, position);
+    if (this.childrens[hoveredIndex] !== undefined) {
+      this.childrens[hoveredIndex]._mouseDown(button, position);
+    }
   }
 };
 
 /**
 * @public {void} onMouseRelease - Function that gets called when the sprite click got released.
 * @event This function only gets called from the engine, you shouldn't trigger it manually.
-* @param {int} button - The click button id. (1: left, 2: right, 4: middle)
+* @param {Number} button - The click button id. (1: left, 2: right, 4: middle)
 * @param {Vector} position - The click position, calculated properly using Engine.getCanvasPos().
 **/
 Scene.prototype.onMouseRelease = function (button, position) {
@@ -328,6 +330,7 @@ Scene.prototype.onMouseRelease = function (button, position) {
       var child = this.childrens[i];
       var start = this._selectionStartPoint;
       var end = this._selectionEndPoint;
+
       if (start.x < end.x && start.y < end.y) { // 1. Selection from top left to bottom right.
         selected = (
           (start.x <= child.position.x) &&
@@ -396,8 +399,6 @@ Scene.prototype.onMouseHover = function (position) {
   if (this.allowMouseSelection && this._selectionStarted) {
     this._selectionEndPoint.x = position.x;
     this._selectionEndPoint.y = position.y;
-    
-    console.log(this._selectionStartPoint, this._selectionEndPoint);
   } else {
     for (var i = 0; i < this.childrens.length; i++) {
       if (this.childrens[i] === undefined) continue;
@@ -435,12 +436,12 @@ Scene.prototype.onMouseOut = function (button, position) {
 };
 
 /**
-* @public {bool} collide - The scene collide function. Called whenever a sprite collides with another one.
+* @public {Boolean} collide - The scene collide function. Called whenever a sprite collides with another one.
 * @event This function only gets called from the CollisionSolver, you shouldn't trigger it manually.
 * @param {Physics.CollisionDirection} direction - The collision direction.
 * @param {HitBox} shape1 - The first shape. This shape is the one that collided.
 * @param {HitBox} shape2 - The second shape.
-* @return {bool} Returns true to confirm the collision, false to invalidate it.
+* @return {Boolean} Returns true to confirm the collision, false to invalidate it.
 **/
 Scene.prototype.collide = function (direction, shape1, shape2) {
   return true;
