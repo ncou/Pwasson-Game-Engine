@@ -109,8 +109,8 @@ Scene.prototype._loop = function () {
             (Game.Engine.mouse.y - this._selectionStartPoint.y)
           );
           
-          Game.context.fillStyle = 'rgba(0, 174, 239, 0.2)';
-          Game.context.strokeStyle = '#0066b2';
+          Game.context.fillStyle = 'rgba(77, 208, 225, 0.2)'; // 'rgba(0, 174, 239, 0.2)';
+          Game.context.strokeStyle = 'rgba(77, 208, 225, 1)';
           Game.context.lineWidth = 1;
           
           Game.context.fill();
@@ -320,25 +320,54 @@ Scene.prototype.onMouseDown = function (button, position) {
 **/
 Scene.prototype.onMouseRelease = function (button, position) {
   if (this.allowMouseSelection && this._selectionStarted) {
+    var selected = false;
     for (var i = 0; i < this.childrens.length; i++) {
       if (this.childrens[i] === undefined) continue;
-      var selected = (
-        (this._selectionStartPoint.x <= this.childrens[i].position.x) &&
-        ((this.childrens[i].position.x + this.childrens[i].size.x) <= this._selectionEndPoint.x) &&
-        (this._selectionStartPoint.y <= this.childrens[i].position.y) &&
-        ((this.childrens[i].position.y + this.childrens[i].size.y) <= this._selectionEndPoint.y)
-      );
-      
+
+      // Let's check for the selection direction:
+      var child = this.childrens[i];
+      var start = this._selectionStartPoint;
+      var end = this._selectionEndPoint;
+      if (start.x < end.x && start.y < end.y) { // 1. Selection from top left to bottom right.
+        selected = (
+          (start.x <= child.position.x) &&
+          (child.position.x + child.size.x <= end.x) &&
+          (start.y <= child.position.y) &&
+          (child.position.y + child.size.y <= end.y)
+        );
+      } else if (start.x > end.x && start.y < end.y) { // 2. Selection from top right to bottom left.
+        selected = (
+          (end.x <= child.position.x) &&
+          (child.position.x + child.size.x <= start.x) &&
+          (start.y <= child.position.y) &&
+          (child.position.y + child.size.y <= end.y)
+        );
+      } else if (start.x < end.x && start.y > end.y) { // 3. Selection from bottom left to top right.
+        selected = (
+          (start.x <= child.position.x) &&
+          (child.position.x + child.size.x <= end.x) &&
+          (end.y <= child.position.y) &&
+          (child.position.y + child.size.y <= start.y)
+        );
+      } else if (start.x > end.x && start.y > end.y) { // 4. Selection from bottom right to top left.
+        selected = (
+          (end.x <= child.position.x) &&
+          (child.position.x + child.size.x <= start.x) &&
+          (end.y <= child.position.y) &&
+          (child.position.y + child.size.y <= start.y)
+        );
+      }
+
       if (selected && this.childrens[i].selected === false) {
         this.childrens[i].selected = true;
         this.childrens[i]._selectionStart();
       }
     }
-  
+
     this._selectionStarted = false;
     this._selectionStartPoint = new Game.Vector(0, 0);
     this._selectionEndPoint = new Game.Vector(0, 0);
-  
+
     return;
   } else {
     /**

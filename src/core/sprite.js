@@ -91,7 +91,7 @@ function Sprite (x, y, width, height, properties) {
   };
   
   Game.merge(this, properties);
-  this.hitbox = new Game.HitBox(this.shape, this.position, this.size.add(new Game.Vector(this.borderSize, this.borderSize)));
+  this.hitbox = new Game.HitBox(this.shape, this.position, this.size);
 
   this._init();
 };
